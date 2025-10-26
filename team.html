@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team | Oil-Edge</title>
+    <link rel="stylesheet" href="preloaderStyle.css">
+    <link rel="stylesheet" href="src/css/index.css">
+    <link rel="stylesheet" href="src/css/navbar.css">
+    <link rel="shortcut icon" href="ambulance.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <div class="gtranslate_wrapper"></div>
+    <script>window.gtranslateSettings = { "default_language": "en", "detect_browser_language": true, "wrapper_selector": ".gtranslate_wrapper" }</script>
+    <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>
+
+    <style>
+        /* ======================================================= */
+        /* === EXISTING GLOBAL STYLES (Kept for continuity) === */
+        /* ======================================================= */
+        .buttons .login,
+        .buttons .get-started,
+        .dark-mode-toggle {
+            font-size: 18px;
+            padding: 10px 30px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 30px;
+        }
+
+        .login, .get-started {
+            background-color: #2980b9; /* Unified blue color */
+            color: white !important;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 50px;
+            text-decoration: none;
+        }
+
+        .login:hover, .get-started:hover {
+            background-color: #1a5a7b; /* Darker shade for hover */
+            transform: scale(1.05);
+        }
+        
+        /* Dark Mode Adjustments */
+        .dark-mode .logo img {
+            filter: brightness(0) invert(1);
+        }
+
+        .navbar.dark-mode .logo-img {
+            filter: brightness(0) invert(1);
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #f3f4f6; /* Light text in dark mode */
+        }
+        
+        .content {
+            transition: background-color 0.3s, color 0.3s;
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            flex-grow: 1;
+        }
+
+        .dark-mode .content {
+            background-color: #444; /* Slightly lighter dark background for content */
+            color: #f3f4f6;
+        }
+
+        /* Footer Styles from the original code */
+        .footer-link {
+            color: #2980b9;
+            text-decoration: none;
+            transition: font-size 0.3s ease;
+        }
+
+        .footer-link:hover {
+            font-size: 1.1em; /* Increased size for better hover effect */
+        }
+
+        /* ======================================================= */
+        /* === NEW AND IMPROVED TEAM SECTION CSS === */
+        /* ======================================================= */
+
+        /* Team Header Styling */
+        .team-header {
+            text-align: center;
+            padding: 40px 0 20px 0;
+            background-color: #f4f7f9; /* Light background for contrast */
+        }
+        .dark-mode .team-header {
+            background-color: #2c2c2c;
+        }
+        
+        .team-header h1 {
+            color: #2980b9;
+            font-size: 2.5em;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+        
+        .dark-mode .team-header h1 {
+             color: #74a9d7; /* Lighter blue for dark mode */
+        }
+        
+        .team-header p {
+            color: #555;
+            font-size: 1.1em;
+        }
+
+        .dark-mode .team-header p {
+             color: #ccc;
+        }
+
+        /* Team Grid Container */
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px; /* Space between cards */
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto; /* Center the grid */
+        }
+
+        /* Team Card Styling */
+        .team-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 300px; /* Max width for each card */
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dark-mode .team-card {
+            background-color: #555;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px); /* Lift effect on hover */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Profile Image */
+        .team-card img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #2980b9; /* Highlight color */
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .dark-mode .team-card img {
+            border-color: #74a9d7;
+        }
+
+        .team-card:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Name and Role */
+        .team-card h2 {
+            font-size: 1.6em;
+            color: #34495e; /* Darker text for name */
+            margin-bottom: 5px;
+        }
+        
+        .dark-mode .team-card h2 {
+            color: #f3f4f6;
+        }
+        
+        .team-card h3 {
+             font-size: 1em;
+             color: #2980b9; /* Role color */
+             margin-bottom: 15px;
+             font-weight: 500;
+        }
+
+        /* Description/Bio */
+        .team-card p {
+            font-size: 0.95em;
+            color: #7f8c8d;
+            line-height: 1.5;
+            min-height: 90px; /* Ensure cards are roughly the same height */
+        }
+        
+        .dark-mode .team-card p {
+            color: #ccc;
+        }
+
+        /* Social Icons Container */
+        .team-social-links {
+            margin-top: 20px;
+        }
+
+        .team-social-links a {
+            color: #95a5a6; /* Neutral social icon color */
+            font-size: 1.5em;
+            margin: 0 10px;
+            transition: color 0.3s ease, transform 0.3s ease;
+            display: inline-block;
+        }
+        
+        .dark-mode .team-social-links a {
+            color: #bbb;
+        }
+
+        .team-social-links a:hover {
+            transform: scale(1.2);
+        }
+
+        /* Specific Social Icon Hover Colors */
+        .team-social-links .fa-twitter:hover {
+            color: #1DA1F2;
+        }
+
+        .team-social-links .fa-linkedin-in:hover {
+            color: #0077b5;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .team-grid {
+                padding: 20px 10px;
+            }
+            .team-card {
+                max-width: 45%; /* Two cards per row on tablets */
+            }
+        }
+
+        @media (max-width: 480px) {
+            .team-card {
+                max-width: 90%; /* Single card per row on phones */
+            }
+            .team-header h1 {
+                font-size: 2em;
+            }
+        }
+        
+        /* Remove the old carousel/card styles that were conflicting */
+        .carousel-container, .carousel, .card, .prev, .next, .dots-container {
+            /* Deactivate old carousel styles */
+            display: none !important;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <div id="preloader">
+        <div class="wrapper">
+            <div class="box-wrap">
+                <div class="box one"></div>
+                <div class="box two"></div>
+                <div class="box three"></div>
+                <div class="box four"></div>
+                <div class="box five"></div>
+                <div class="box six"></div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="logo">
+            
+            <a href="./index.html">
+                <img src="images/logo2-w.webp" alt="Ambulance Monitoring System Logo"
+                    style="width: 50px; height: auto" />
+            </a>
+        </div>
+        <div class="buttons">
+            <a href="login.html" class="login">Log in</a>
+            <button class="light-dark-btn dark-mode-toggle" id="dark-mode-toggle">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+        
+    </div>
+    <nav class="menu">
+        <ul>
+            <li>
+                <a href="#container" style="color: #333;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6.34314 11.5858L12 5.92893M12 5.92893L17.6568 11.5858M12 5.92893V18.0711"
+                            stroke="currentColor">
+                        </path>
+                    </svg>
+                </a>
+            </li>
+            <li>
+                <a href="index.html" id="home-link" class="menu_links" data-link="Home">
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="features.html" id="features-link" class="menu_links" data-link="Features">
+                    <span>Features</span></a>
+            </li>
+            <li>
+                <a href="team.html" id="team-link" class="menu_links" data-link="Team" style="color: #2980b9;">
+                    <span>Team</span></a>
+            </li>
+            <li>
+                <a href="contact.html" id="contact-link" class="menu_links" data-link="Contact">
+                    <span>Contact</span></a>
+            </li>
+            <li>
+                <a href="Feedback.html" id="contact-link" class="menu_links" data-link="Feedback">
+                    <span>Feedback</span></a>
+            </li>
+            <li>
+                <a href="nearby.html" id="contact-link" class="menu_links" data-link="Nearby">
+                    <span>Nearby</span></a>
+            </li>
+        </ul>
+    </nav>
+    
+    <div class="content" id="main-content">
+        <div class="team-header">
+            <h1>Meet Our Dedicated Team</h1>
+            <p>The talented individuals who bring Oil-Edge to life.</p>
+        </div>
+
+        <div class="team-grid">
+            <div class="team-card">
+                <img src="images/service-web.jpg" alt="Aditya Tiwari">
+                <h2>Aditya Tiwari</h2>
+                <h3>Aspiring Web Developer / Security Enthusiast</h3>
+                <p>🌐 Proficient in C, C++, & Python. Passionate Bug Bounty Hunter and Ethical Hacking Enthusiast. A lifelong learner dedicated to building secure and efficient web solutions.</p>
+                <div class="team-social-links">
+                    <a href="https://twitter.com/adityaehhhh" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://linkedin.com/in/adityaehhhh" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="team-card">
+                <img src="images/contact-w.jpg" alt="Yash Garg">
+                <h2>Yash Garg</h2>
+                <h3>Frontend Web Developer</h3>
+                <p>An enthusiastic Frontend Developer, highly proficient in **React** and modern JavaScript frameworks. Focused on creating intuitive, responsive, and high-performance user interfaces.</p>
+                <div class="team-social-links">
+                    <a href="https://twitter.com/yashgarg" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://linkedin.com/in/yashgarg" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="team-card">
+                <img src="images/barkha.jpg" alt="Barkha Dhamija" style="object-fit: contain;">
+                <h2>Barkha Dhamija</h2>
+                <h3>UI/UX Designer & Analyst</h3>
+                <p>Dedicated to crafting seamless user experiences and translating complex requirements into elegant, accessible, and user-friendly designs for the application.</p>
+                <div class="team-social-links">
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="team-card">
+                <img src="images/kshaunish.jpg" alt="Kshaunish Gupta" style="object-fit: contain;">
+                <h2>Kshaunish Gupta</h2>
+                <h3>Backend Developer & Database Manager</h3>
+                <p>Specializing in robust backend architecture, data management, and API design. Ensures the stability, security, and scalability of the core service infrastructure.</p>
+                <div class="team-social-links">
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="team-card">
+                <img src="images/lipika.jpg" alt="Lipika Aggarwal" style="object-fit: contain;">
+                <h2>Lipika Aggarwal</h2>
+                <h3>Quality Assurance & Testing Lead</h3>
+                <p>Overseeing all testing phases to guarantee product quality. Focused on identifying critical bugs and ensuring a reliable, polished application for all users.</p>
+                <div class="team-social-links">
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="team-card">
+                <img src="images/aarav.jpg" alt="Aarav Rawat" style="object-fit: contain;">
+                <h2>Aarav Rawat</h2>
+                <h3>Cloud & Deployment Engineer</h3>
+                <p>Manages the deployment and scaling of our services in the cloud. Ensures high availability, optimized performance, and continuous integration/delivery pipelines.</p>
+                <div class="team-social-links">
+                    <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="#" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="features-container">
+        <div class="contact-features">
+            <div class="inner">
+                <div class="front">
+                    <a href="Contactus.html" style="text-decoration: none;">
+                        <img src="images/contact-w.avif" alt="Contact Us" />
+                        <h2>Contact Us</h2>
+                    </a>
+                </div>
+                <div class="back">
+                    <p>
+                        Reach out to us for any inquiries or assistance. We're here to
+                        help you 24/7 with our emergency services.
+                    </p>
+                    <a href="contact.html" class="button">Go to Contact</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer style="color: #f3f4f6; text-align: center; width: 100%; background-color: #C4D7FF; border: none;">
+        <div
+            style="display: flex; justify-content: space-between; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; padding: 20px 0;">
+
+            <div style="flex: 1; min-width: 200px; margin-bottom: 20px;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: #2980b9;">Quick Links</h3>
+                <ul style="list-style-type: none; padding: 0;">
+                    <li><a href="about.html" class="footer-link">About Us</a></li>
+                    <li><a href="contact.html" class="footer-link">Contact Us</a></li>
+                    <li><a href="privacy.html" class="footer-link">Privacy Policy</a></li>
+                    <li><a href="terms.html" class="footer-link">Terms of Service</a></li>
+                    <li><a href="sitemap.html" class="footer-link">Site Map</a></li>
+                </ul>
+            </div>
+
+            <div class="new-footer-section">
+                <h3 style="color: #2980b9;">Contact Info</h3>
+                <p style="color: #000;">GGSIPU, New Delhi, 110044</p>
+                <a href="mailto:emergency@ambulanceservice.in" style="color: #000000;">abc@gmail.com</a>
+                <p style="color: #000000;">Phone: <a href="tel:+91-911-1234567" style="color: #000000;">+91-911-1234567</a></p>
+            </div>
+
+            <div style="text-align: center; min-width: 200px; color: black;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: #2980b9;">Follow Us</h3>
+                <div style="display: flex; justify-content: center; align-items: center; gap: 15px; height: 50px;">
+                    <a href="https://www.facebook.com" target="_blank" class="social-icon facebook"
+                        style="color: black; text-decoration: none; font-size: 1.5rem;"><i
+                            class="fab fa-facebook"></i></a>
+                    <a href="https://www.twitter.com" target="_blank" class="social-icon twitter"
+                        style="color: black; text-decoration: none; font-size: 1.5rem;"><i
+                            class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://www.instagram.com" target="_blank" class="social-icon instagram"
+                        style="color: black; text-decoration: none; font-size: 1.5rem;"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com" target="_blank" class="social-icon linkedin"
+                        style="color: black; text-decoration: none; font-size: 1.5rem;"><i
+                            class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div style="flex: 1; min-width: 200px; margin-bottom: 20px;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: #2980b9;">Subscribe to Our Newsletter</h3>
+                <form action="#">
+                    <i class="fas fa-envelope" style="position: absolute; top: 7.7rem; right: 22.3rem; color: gray; font-size: 13px;"></i>
+                    <input type="email" placeholder="Your Email"
+                        style="padding: 10px; width: 80%; border: none; border-radius: 5px; padding-left: 27px;" required><br><br>
+                    <button type="submit"
+                        style="background-color: #e81a1a; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 5px;">Subscribe</button>
+                </form>
+                <div id="subscription-notification" style="display:none; background-color: rgba(212, 237, 218, 0.8); color: #155724; padding: 10px; border-radius: 5px; position: absolute; top: 10px; left: 600px; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                    Thank you for subscribing to our newsletter!
+                </div>
+            </div>
+            <script>
+                document.querySelector("form").addEventListener("submit", function(event) {
+                    event.preventDefault(); // Prevent form from submitting immediately
+                
+                    const emailInput = document.querySelector("input[type='email']");
+                    const emailRegex = /^[^\s@]+@gmail\.com$/;
+                
+                    if (emailRegex.test(emailInput.value)) {
+                        const notification = document.getElementById("subscription-notification");
+                        notification.style.display = "block";
+                
+                        setTimeout(function() {
+                            notification.style.display = "none";
+                        }, 3000);
+                
+                        this.reset();
+                    } else {
+                        alert("Please enter a valid Gmail address.");
+                    }
+                });
+            </script>
+            
+        </div>
+    </footer>
+    
+
+
+    <div
+        style="background-color: #C4D7FF; color: #000000; display: flex; justify-content: center; align-items: center; padding: 10px 20px; border-top: 1px solid #a0c0ff;">
+        <strong>
+            <p>&copy; 2024 Res-Q-Rush. All rights reserved.</p>
+        </strong>
+        <a href="chatbot.html">
+            <div class="fixed bottom-0 right-2 chatbot-container">
+                <button class="chatbot-button group">
+                    <img class="h-20" src="chatbot.gif" alt="chatbot" />
+                    <span class="tooltip-text">
+                        Welcome to Res-Q-Rush!<br />
+                        How can I help You?
+                    </span>
+                </button>
+            </div>
+        </a>
+        <button class="light-dark-btn dark-mode-toggle" id="dark-mode-button">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+        
+        
+        <script src="script.js">
+        </script>
+        <button id="scrollToTopBtn" class="scroll-top" aria-label="Scroll to top">
+            <div class="scroll-top-icon">
+                <i class="fa-solid fa-arrow-up"></i>
+            </div>
+            <svg class="progress-ring" width="60" height="60">
+                <circle class="progress-ring__circle" stroke="#ffffff" stroke-width="4" fill="transparent" r="28" cx="30"
+                    cy="30"></circle>
+            </svg>
+        </button>
+        <style>
+            .scroll-top {
+                position: fixed;
+                right: 1.6%;
+                background: linear-gradient(100deg, #1ca6f0, #3c7aff, #05deff);
+                color: white;
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+                box-shadow: 0 5px 15px rgba(255, 69, 159, 0.4);
+                overflow: visible;
+                z-index: 10;
+                bottom: 75px;
+            }
+        
+            .scroll-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+        
+            .scroll-top:hover {
+                transform: scale(1.1);
+                box-shadow: 0 8px 20px rgba(255, 69, 159, 0.6);
+            }
+        
+            .scroll-top:active {
+                transform: scale(1.05);
+            }
+        
+            .scroll-top-icon {
+                position: relative;
+                z-index: 2;
+                transition: transform 0.3s ease;
+            }
+        
+            .scroll-top:hover .scroll-top-icon {
+                transform: translateY(-3px);
+            }
+        
+            /* Progress Ring Styling */
+            .progress-ring {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                transform: rotate(-90deg);
+            }
+        
+            .progress-ring__circle {
+                transition: stroke-dashoffset 0.35s;
+                transform-origin: 50% 50%;
+            }
+        
+            /* Pulse Animation */
+            @keyframes pulse {
+                0% {
+                    box-shadow: 0 5px 15px rgba(255, 69, 159, 0.4);
+                }
+        
+                50% {
+                    box-shadow: 0 5px 15px rgba(255, 69, 159, 0.7);
+                }
+        
+                100% {
+                    box-shadow: 0 5px 15px rgba(255, 69, 159, 0.4);
+                }
+            }
+        
+            .scroll-top:hover {
+                animation: pulse 1.5s infinite;
+            }
+        
+            .scroll-top.show {
+                animation: none;
+            }
+        
+            .scroll-top.show:hover {
+                animation: pulse 1.5s infinite;
+            }
+        </style>
+        <script>
+            // Get the button
+            const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+            const progressCircle = document.querySelector(".progress-ring__circle");
+            const radius = progressCircle.r.baseVal.value;
+            const circumference = 2 * Math.PI * radius;
+        
+            // Set the circle progress properties
+            progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+            progressCircle.style.strokeDashoffset = circumference;
+        
+            // Function to show or hide the button based on scroll position
+            function toggleScrollButton() {
+                if (window.scrollY > 100) {
+                    scrollToTopBtn.classList.add("show");
+                } else {
+                    scrollToTopBtn.classList.remove("show");
+                }
+            }
+        
+            // Function to set the scroll progress on the button ring
+            function setProgress(percent) {
+                const offset = circumference - (percent / 100) * circumference;
+                progressCircle.style.strokeDashoffset = offset;
+            }
+        
+            // Listen for scroll events to update button visibility and progress
+            window.addEventListener("scroll", () => {
+                toggleScrollButton();
+                const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+                setProgress(scrollPercent);
+            });
+        
+            // Smooth scroll to top when the button is clicked
+            scrollToTopBtn.addEventListener("click", () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: "smooth"
+                });
+            });
+        </script>
+    </div>
+</body>
+</html>

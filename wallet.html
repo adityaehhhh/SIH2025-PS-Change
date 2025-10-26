@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Wallet & Marketplace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fef9e7 0%, #fdeaa3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 30px 30px 0 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            text-align: center;
+        }
+
+        .crop-circle {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+        }
+
+        .crop-image {
+            width: 80px;
+            height: 80px;
+        }
+
+        .balance-label {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+
+        .coin-icon {
+            width: 32px;
+            height: 32px;
+            background: #f59e0b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .balance-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .balance-subtitle {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .nav-tabs {
+            background: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+
+        .nav-tab.inactive {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .nav-tab:hover {
+            background: #e5e7eb;
+        }
+
+        .nav-tab.active:hover {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+        }
+
+        .content {
+            background: white;
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .transaction-item {
+            background: #f9fafb;
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 4px solid;
+        }
+
+        .transaction-item.credit {
+            border-left-color: #10b981;
+        }
+
+        .transaction-item.debit {
+            border-left-color: #ef4444;
+        }
+
+        .transaction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .transaction-icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .transaction-rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .star {
+            color: #fbbf24;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .transaction-amount-section {
+            text-align: right;
+        }
+
+        .transaction-amount {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .transaction-amount.credit {
+            color: #10b981;
+        }
+
+        .transaction-amount.debit {
+            color: #ef4444;
+        }
+
+        .marketplace-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .marketplace-item {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 2px solid #fde68a;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .marketplace-item:hover {
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+        }
+
+        .marketplace-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .marketplace-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .marketplace-brand {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .marketplace-price {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .marketplace-price-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .redeem-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        }
+
+        .redeem-btn:hover {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .popup-icon {
+            width: 64px;
+            height: 64px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 32px;
+        }
+
+        .popup h3 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .popup p {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .popup-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .whatsapp-btn {
+            padding: 15px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .whatsapp-btn:hover {
+            background: #059669;
+        }
+
+        .cancel-btn {
+            padding: 15px;
+            background: #e5e7eb;
+            color: #374151;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cancel-btn:hover {
+            background: #d1d5db;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="crop-circle">
+                <svg class="crop-image" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" fill="#F59E0B"/>
+                    <path d="M30 55 Q35 45 40 55 L45 50 Q50 40 55 50 L60 45 Q65 35 70 45" stroke="#FCD34D" stroke-width="3" fill="none"/>
+                    <circle cx="35" cy="60" r="3" fill="#FCD34D"/>
+                    <circle cx="50" cy="55" r="3" fill="#FCD34D"/>
+                    <circle cx="65" cy="50" r="3" fill="#FCD34D"/>
+                </svg>
+            </div>
+            <p class="balance-label">Available Balance</p>
+            <div class="balance-amount">
+                <div class="coin-icon">🌾</div>
+                <span class="balance-number" id="balanceDisplay">450</span>
+            </div>
+            <p class="balance-subtitle">Oil Seeds Coins</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" id="walletTab" onclick="switchView('wallet')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+                    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+                    <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
+                </svg>
+                Wallet
+            </button>
+            <button class="nav-tab inactive" id="marketplaceTab" onclick="switchView('marketplace')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/>
+                    <path d="M3 6h18"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+                Marketplace
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Wallet View -->
+            <div id="walletView">
+                <h2 class="section-title">Transaction History</h2>
+                <div class="transaction-list" id="transactionList"></div>
+            </div>
+
+            <!-- Marketplace View -->
+            <div id="marketplaceView" class="hidden">
+                <h2 class="section-title">Redeem Your Coins</h2>
+                <div class="marketplace-grid" id="marketplaceGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp Popup -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup">
+            <div class="popup-icon">💬</div>
+            <h3>Complete Purchase via WhatsApp</h3>
+            <p>Click below to open WhatsApp and access the link to complete your crop insurance purchase.</p>
+            <div class="popup-buttons">
+                <button class="whatsapp-btn" onclick="openWhatsApp()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Open WhatsApp
+                </button>
+                <button class="cancel-btn" onclick="closePopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let balance = 450;
+        let transactions = [
+            { id: 1, type: 'credit', amount: 150, reason: 'Crop Sale - Almond Shell 50kg', date: '2025-10-24', rating: 4.5 },
+            { id: 2, type: 'credit', amount: 200, reason: 'Crop Sale - Sesame Hulls 80kg', date: '2025-10-22', rating: 4.8 },
+            { id: 3, type: 'debit', amount: 50, reason: 'Fertilizer - NPK 1kg', date: '2025-10-20' },
+            { id: 4, type: 'credit', amount: 100, reason: 'Crop Sale - Sunflower Cake 40kg', date: '2025-10-18', rating: 4.2 },
+            { id: 5, type: 'debit', amount: 80, reason: 'Crop Insurance - 3 Month', date: '2025-10-15' }
+        ];
+
+        const marketplaceItems = [
+            { id: 1, name: 'Crop Insurance - 3 Month', coins: 80, type: 'insurance' },
+            { id: 2, name: 'Crop Insurance - 6 Month', coins: 150, type: 'insurance' },
+            { id: 3, name: 'NPK Fertilizer 1kg', brand: 'Tata Rallis', coins: 50 },
+            { id: 4, name: 'Urea 1kg', brand: 'IFFCO', coins: 30 },
+            { id: 5, name: 'DAP Fertilizer 1kg', brand: 'Coromandel', coins: 45 },
+            { id: 6, name: 'Potash 1kg', brand: 'Zuari', coins: 35 }
+        ];
+
+        function switchView(view) {
+            const walletView = document.getElementById('walletView');
+            const marketplaceView = document.getElementById('marketplaceView');
+            const walletTab = document.getElementById('walletTab');
+            const marketplaceTab = document.getElementById('marketplaceTab');
+
+            if (view === 'wallet') {
+                walletView.classList.remove('hidden');
+                marketplaceView.classList.add('hidden');
+                walletTab.classList.add('active');
+                walletTab.classList.remove('inactive');
+                marketplaceTab.classList.remove('active');
+                marketplaceTab.classList.add('inactive');
+            } else {
+                walletView.classList.add('hidden');
+                marketplaceView.classList.remove('hidden');
+                marketplaceTab.classList.add('active');
+                marketplaceTab.classList.remove('inactive');
+                walletTab.classList.remove('active');
+                walletTab.classList.add('inactive');
+            }
+        }
+
+        function renderTransactions() {
+            const listContainer = document.getElementById('transactionList');
+            listContainer.innerHTML = '';
+
+            transactions.forEach(transaction => {
+                const icon = transaction.type === 'credit' 
+                    ? '<svg class="transaction-icon" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>'
+                    : '<svg class="transaction-icon" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+
+                const ratingHTML = transaction.rating 
+                    ? `<div class="transaction-rating"><span class="star">★</span> Rating: ${transaction.rating}/5.0</div>`
+                    : '';
+
+                const item = document.createElement('div');
+                item.className = `transaction-item ${transaction.type}`;
+                item.innerHTML = `
+                    <div class="transaction-header">
+                        <div class="transaction-info">
+                            <div class="transaction-title">
+                                ${icon}
+                                ${transaction.reason}
+                            </div>
+                            ${ratingHTML}
+                            <div class="transaction-date">${transaction.date}</div>
+                        </div>
+                        <div class="transaction-amount-section">
+                            <div class="transaction-amount ${transaction.type}">
+                                ${transaction.type === 'credit' ? '+' : '-'}${transaction.amount}
+                            </div>
+                            <div class="coin-icon" style="margin-left: auto;">🌾</div>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        function renderMarketplace() {
+            const gridContainer = document.getElementById('marketplaceGrid');
+            gridContainer.innerHTML = '';
+
+            marketplaceItems.forEach(item => {
+                const brandHTML = item.brand 
+                    ? `<p class="marketplace-brand">Brand: ${item.brand}</p>`
+                    : '';
+
+                const itemElement = document.createElement('div');
+                itemElement.className = 'marketplace-item';
+                itemElement.innerHTML = `
+                    <div class="marketplace-header">
+                        <div class="marketplace-info">
+                            <h3>${item.name}</h3>
+                            ${brandHTML}
+                        </div>
+                        <div class="marketplace-price">
+                            <div class="coin-icon">🌾</div>
+                            <span class="marketplace-price-number">${item.coins}</span>
+                        </div>
+                    </div>
+                    <button class="redeem-btn" onclick="purchaseItem(${item.id})">Redeem Now</button>
+                `;
+                gridContainer.appendChild(itemElement);
+            });
+        }
+
+        function purchaseItem(itemId) {
+            const item = marketplaceItems.find(i => i.id === itemId);
+            
+            if (item.type === 'insurance') {
+                document.getElementById('popupOverlay').classList.add('active');
+            } else {
+                if (balance >= item.coins) {
+                    const newTransaction = {
+                        id: transactions.length + 1,
+                        type: 'debit',
+                        amount: item.coins,
+                        reason: `${item.name}${item.brand ? ' - ' + item.brand : ''}`,
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                    transactions.unshift(newTransaction);
+                    balance -= item.coins;
+                    
+                    document.getElementById('balanceDisplay').textContent = balance;
+                    renderTransactions();
+                    alert(`Successfully purchased ${item.name}!`);
+                } else {
+                    alert('Insufficient balance!');
+                }
+            }
+        }
+
+        function openWhatsApp() {
+            window.open('https://wa.me/9266133282?text=I%20want%20to%20redeem%20coins%20for%20Crop%20Insurance', '_blank');
+            closePopup();
+        }
+
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('active');
+        }
+
+        // Initialize
+        renderTransactions();
+        renderMarketplace();
+    </script>
+</body>
+</html>
