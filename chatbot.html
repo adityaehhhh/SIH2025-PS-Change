@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chat Assistant - Light Theme</title>
+    <style>
+        /* Base Reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        /* --- LIGHT THEME VARIABLES --- */
+        :root {
+            --color-bg-dark: #f0f0f0;         /* Light grey for sidebar */
+            --color-bg-main: #ffffff;         /* White background for chat area */
+            --color-bg-input: #f7f7f7;        /* Very light grey for input group */
+            --color-accent: #007bff;          /* Primary blue accent */
+            --color-accent-hover: #0069d9;
+            --color-text-main: #333333;       /* Dark text for high contrast */
+            --color-text-subtle: #8e8ea0;     /* Grey for subtle text/borders */
+            --color-bubble-user: var(--color-accent); /* User bubble uses primary blue */
+            --color-bubble-bot: #e0e0e0;      /* Light grey for bot bubble */
+            --color-border-subtle: #d0d0d0;   /* Light border color */
+        }
+
+        /* --- Layout & Responsiveness --- */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: var(--color-bg-main);
+            color: var(--color-text-main);
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 260px;
+            min-width: 260px;
+            background-color: var(--color-bg-dark);
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+            border-right: 1px solid var(--color-border-subtle);
+            overflow-y: auto;
+            transition: width 0.3s ease;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 1rem 1rem 1.5rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            align-items: center;
+            overflow-y: scroll;
+        }
+        
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+        }
+        
+        /* Collapse sidebar on small screens */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 0;
+                min-width: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+            .main {
+                width: 100%;
+            }
+        }
+        
+        /* --- Sidebar Elements --- */
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--color-border-subtle);
+            margin-bottom: 1rem;
+        }
+
+        .new-chat-btn {
+            background-color: var(--color-accent);
+            color: white;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            flex-grow: 1;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+
+        .new-chat-btn:hover {
+            background-color: var(--color-accent-hover);
+        }
+
+        .chat-history-title {
+            color: var(--color-text-subtle);
+            font-size: 0.9rem;
+            padding: 0.5rem 0;
+        }
+
+        .chat-link {
+            background-color: transparent;
+            color: var(--color-text-main);
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-link.active {
+            background-color: var(--color-border-subtle);
+            font-weight: bold;
+        }
+        .chat-link:not(.active):hover {
+            background-color: #e9e9e9;
+        }
+
+        /* --- Chat Bubbles --- */
+        .chat-entry {
+            max-width: 100%;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            border-radius: 18px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .user .chat-entry {
+            background-color: var(--color-bubble-user);
+            color: white;
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .bot .chat-entry {
+            background-color: var(--color-bubble-bot);
+            color: var(--color-text-main);
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+            margin-right: auto;
+        }
+        
+        .bot .chat-entry p {
+            margin-top: 0;
+            margin-bottom: 1em;
+        }
+        .bot .chat-entry p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* --- Input Area --- */
+        .input-area {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            padding: 1rem 0;
+            background-color: var(--color-bg-main);
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow for light theme */
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        .input-group {
+            display: flex;
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--color-bg-input);
+            border-radius: 12px;
+            border: 1px solid var(--color-border-subtle);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+            padding: 8px 10px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 0.75rem 0.5rem;
+            border: none;
+            background-color: transparent;
+            color: var(--color-text-main);
+            font-size: 1.1rem;
+            outline: none;
+        }
+
+        .input-group button {
+            margin-left: 0.5rem;
+            padding: 0.75rem;
+            background-color: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+        }
+
+        .input-group button:hover {
+            background-color: var(--color-accent-hover);
+        }
+
+        /* Typing Indicator */
+        .typing {
+            font-style: italic;
+            color: var(--color-text-subtle);
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 18px;
+            background-color: var(--color-bubble-bot);
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <button class="new-chat-btn" onclick="newChat()">+ New Chat</button>
+        </div>
+        <div class="chat-history-title">RECENT CONVERSATIONS</div>
+        <div id="chatList">
+            <div class="chat-link active" data-chat-id="0" onclick="loadChat(0)">Start Chat</div>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="chat-box" id="chatBox">
+            <div class="chat-container bot">
+                <div class="chat-entry">
+                    Welcome to the **AI Assistant**! I'm ready to help you with your queries. How can I assist you today?
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-area">
+            <div class="input-group">
+                <input type="text" id="userInput" placeholder="Send a message..." onkeydown="handleKey(event)"/>
+                <button onclick="startVoiceInput()">🎤</button>
+                <button onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // NOTE: Replace this with your actual Cohere API Key or proxy endpoint.
+    const cohereAPIKey = 'F6dudbIR0DQQ17pI3niD0IVWLYk6Di1Wr5fNxV5k'; 
+    let currentChatId = 0;
+    
+    // Store history for all chats: { 0: [{sender: 'bot', content: '...'}], 1: [...] }
+    let allChatHistories = {
+        0: [
+            { sender: 'bot', content: "Welcome to the **AI Assistant**! I'm ready to help you with your queries. How can I assist you today?" }
+        ]
+    };
+    let nextChatId = 1;
+
+    /* --- Utility Functions --- */
+
+    function parseMarkdown(text) {
+        // Simple markdown parser for bold, italics, and paragraphs
+        let html = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold **text**
+            .replace(/\*(.*?)\*/g, '<em>$1</em>') // Italic *text*
+            .replace(/^- (.*)/gm, '<li>$1</li>'); // Simple list item
+        
+        // Wrap lines in <p> tags, excluding lists
+        if (!html.includes('<li>')) {
+            html = html.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p}</p>`).join('');
+        }
+        
+        return html;
+    }
+
+    /* --- Chat History Management --- */
+
+    function saveCurrentChat(input) {
+        // Update the current chat's history
+        allChatHistories[currentChatId] = input;
+        
+        // Update sidebar title if it's a new chat
+        const firstMessage = input.find(msg => msg.sender === 'user');
+        if (firstMessage) {
+            const chatLink = document.querySelector(`.chat-link[data-chat-id="${currentChatId}"]`);
+            if (chatLink) {
+                // Use the first 30 characters of the first user message as the title
+                chatLink.textContent = firstMessage.content.substring(0, 30) + (firstMessage.content.length > 30 ? '...' : '');
+            }
+        }
+    }
+
+    function loadChat(id) {
+        // Set the active chat ID
+        currentChatId = id;
+        
+        // Update active class in sidebar
+        document.querySelectorAll('.chat-link').forEach(link => {
+            link.classList.remove('active');
+            if (parseInt(link.dataset.chatId) === id) {
+                link.classList.add('active');
+            }
+        });
+        
+        // Render the chat history
+        const history = allChatHistories[id] || [];
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML = ''; // Clear box
+        
+        history.forEach(entry => {
+            const content = entry.sender === 'bot' ? parseMarkdown(entry.content) : entry.content;
+            const container = document.createElement('div');
+            container.className = `chat-container ${entry.sender}`;
+            container.innerHTML = `<div class="chat-entry">${content}</div>`;
+            chatBox.appendChild(container);
+        });
+        
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function newChat() {
+        const newId = nextChatId++;
+        allChatHistories[newId] = []; // Empty history for new chat
+        
+        const chatList = document.getElementById('chatList');
+        const chatItem = document.createElement('div');
+        chatItem.className = 'chat-link';
+        chatItem.dataset.chatId = newId;
+        chatItem.textContent = `New Chat ${newId}`;
+        chatItem.onclick = () => loadChat(newId);
+        chatList.prepend(chatItem); // Add to the top
+        
+        loadChat(newId); // Load and activate the new chat
+        
+        // Add introductory message to the new chat's history
+        const initialMessage = "New chat started. I'm ready when you are!";
+        appendMessage(initialMessage, 'bot', true);
+        allChatHistories[newId].push({ sender: 'bot', content: initialMessage });
+        saveCurrentChat(allChatHistories[newId]);
+    }
+
+    /* --- Messaging Logic --- */
+    
+    function appendMessage(content, sender = 'bot', isMarkdown = false) {
+        const chatBox = document.getElementById('chatBox');
+        
+        const container = document.createElement('div');
+        container.className = `chat-container ${sender}`;
+        
+        const entry = document.createElement('div');
+        entry.className = (content.indexOf('typing') > -1) ? 'typing' : 'chat-entry';
+        
+        if (isMarkdown && content.indexOf('typing') === -1) {
+            entry.innerHTML = parseMarkdown(content);
+        } else {
+            entry.textContent = content; // Use textContent for user/typing to prevent injection
+        }
+        
+        container.appendChild(entry);
+        chatBox.appendChild(container);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        
+        // Only save to history if it's a real message (not 'typing...')
+        if (content.indexOf('typing') === -1) {
+            const currentHistory = allChatHistories[currentChatId];
+            if (currentHistory) {
+                currentHistory.push({ sender, content });
+                saveCurrentChat(currentHistory); // Update history and sidebar title
+            }
+        }
+    }
+    
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const text = input.value.trim();
+        if (!text) return;
+
+        appendMessage(text, 'user', false);
+        input.value = '';
+
+        // Typing indicator
+        const typingIndicator = document.createElement('div');
+        typingIndicator.className = 'chat-container bot';
+        typingIndicator.id = 'typingIndicator';
+        typingIndicator.innerHTML = '<div class="typing">AI Assistant is thinking...</div>';
+        document.getElementById('chatBox').appendChild(typingIndicator);
+        document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
+
+        
+        const res = await fetch("https://api.cohere.ai/v1/generate", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${cohereAPIKey}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                model: "command-r-plus",
+                prompt: text,
+                max_tokens: 300,
+                temperature: 0.7
+                // Note: Real chatbot would send the full history to maintain context
+            })
+        });
+
+        // Remove typing indicator
+        typingIndicator.remove();
+
+        if (res.ok) {
+            const data = await res.json();
+            const botResponse = data.generations?.[0]?.text.trim() || "Sorry, I encountered an error.";
+            appendMessage(botResponse, 'bot', true);
+        } else {
+             appendMessage("I'm sorry, there was a connection error. Please try again.", 'bot', false);
+        }
+    }
+
+    function handleKey(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+    
+    function startVoiceInput() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Speech Recognition not supported in this browser. Try Chrome or Edge.");
+            return;
+        }
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+        
+        document.getElementById('userInput').placeholder = "Listening...";
+        recognition.start();
+
+        recognition.onresult = function(event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('userInput').value = transcript;
+            document.getElementById('userInput').placeholder = "Send a message...";
+            sendMessage(); // Send message immediately after recognizing voice input
+        };
+
+        recognition.onerror = function(event) {
+            console.error('Voice input error:', event.error);
+            document.getElementById('userInput').placeholder = "Send a message...";
+        };
+        
+        recognition.onend = function() {
+            document.getElementById('userInput').placeholder = "Send a message...";
+        };
+    }
+
+    // Initial load
+    window.onload = () => {
+        loadChat(0);
+    };
+</script>
+
+</body>
+</html>
