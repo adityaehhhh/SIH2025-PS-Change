@@ -3,20 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chat Assistant - Light Theme</title>
+    <title>Oilseed & Agriculture Assistant</title>
     <style>
-        /* Base Reset */
         * {
             box-sizing: border-box;
         }
 
-        /* --- LIGHT THEME VARIABLES --- */
         :root {
             --color-bg-dark: #f0f0f0;
             --color-bg-main: #ffffff;
             --color-bg-input: #f7f7f7;
-            --color-accent: #007bff;
-            --color-accent-hover: #0069d9;
+            --color-accent: #28a745;
+            --color-accent-hover: #218838;
             --color-text-main: #333333;
             --color-text-subtle: #8e8ea0;
             --color-bubble-user: var(--color-accent);
@@ -24,7 +22,6 @@
             --color-border-subtle: #d0d0d0;
         }
 
-        /* --- Layout & Responsiveness --- */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -53,17 +50,17 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            position: relative;
         }
 
         .chat-box {
             flex: 1;
-            padding: 1rem 1rem 1.5rem 1rem;
+            padding: 1rem 1rem 80px 1rem;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
             align-items: center;
-            overflow-y: scroll;
+            overflow-y: auto;
         }
         
         .chat-container {
@@ -72,7 +69,6 @@
             display: flex;
         }
 
-        /* Mobile menu button */
         .menu-toggle {
             display: none;
             position: fixed;
@@ -89,11 +85,6 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .menu-toggle:hover {
-            background-color: var(--color-accent-hover);
-        }
-
-        /* Mobile overlay */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -105,7 +96,6 @@
             z-index: 99;
         }
         
-        /* Mobile responsive styles */
         @media (max-width: 768px) {
             .menu-toggle {
                 display: block;
@@ -128,54 +118,27 @@
                 display: block;
             }
 
-            .main {
-                width: 100%;
-            }
-
             .chat-box {
-                padding: 4rem 0.5rem 1rem 0.5rem;
+                padding: 4rem 0.5rem 100px 0.5rem;
             }
 
             .input-area {
                 padding: 0.75rem 0.5rem;
-            }
-
-            .input-group {
-                padding: 6px 8px;
-            }
-
-            .input-group input {
-                font-size: 1rem;
-                padding: 0.6rem 0.4rem;
-            }
-
-            .input-group button {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-
-            .chat-entry {
-                padding: 0.75rem 1rem;
-                font-size: 0.95rem;
-                max-width: 85%;
+                min-height: 70px;
             }
         }
 
         @media (max-width: 480px) {
-            .chat-entry {
-                padding: 0.6rem 0.85rem;
-                font-size: 0.9rem;
-                max-width: 90%;
-            }
-
             .sidebar {
                 width: 80%;
                 min-width: 80%;
             }
+
+            .chat-box {
+                padding: 4rem 0.5rem 110px 0.5rem;
+            }
         }
         
-        /* --- Sidebar Elements --- */
         .sidebar-header {
             display: flex;
             justify-content: space-between;
@@ -228,7 +191,6 @@
             background-color: #e9e9e9;
         }
 
-        /* --- Chat Bubbles --- */
         .chat-entry {
             max-width: 100%;
             padding: 1rem 1.25rem;
@@ -264,17 +226,33 @@
             margin-bottom: 0;
         }
 
-        /* --- Input Area --- */
+        .bot .chat-entry ul {
+            margin: 0.5em 0;
+            padding-left: 1.5em;
+        }
+
+        .bot .chat-entry li {
+            margin: 0.3em 0;
+        }
+
         .input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
             display: flex;
             justify-content: center;
             width: 100%;
-            padding: 1rem 0;
+            padding: 1rem;
             background-color: var(--color-bg-main);
             box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
-            position: sticky;
-            bottom: 0;
             z-index: 10;
+        }
+
+        @media (min-width: 769px) {
+            .input-area {
+                left: 260px;
+            }
         }
 
         .input-group {
@@ -286,6 +264,7 @@
             border: 1px solid var(--color-border-subtle);
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
             padding: 8px 10px;
+            align-items: center;
         }
 
         .input-group input {
@@ -294,8 +273,9 @@
             border: none;
             background-color: transparent;
             color: var(--color-text-main);
-            font-size: 1.1rem;
+            font-size: 1rem;
             outline: none;
+            min-width: 0;
         }
 
         .input-group button {
@@ -313,13 +293,13 @@
             align-items: center;
             justify-content: center;
             transition: background-color 0.2s;
+            flex-shrink: 0;
         }
 
         .input-group button:hover {
             background-color: var(--color-accent-hover);
         }
 
-        /* Typing Indicator */
         .typing {
             font-style: italic;
             color: var(--color-text-subtle);
@@ -333,6 +313,29 @@
         @keyframes pulse-dot {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
+        }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            justify-content: center;
+        }
+
+        .chip {
+            background-color: var(--color-accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border: none;
+        }
+
+        .chip:hover {
+            background-color: var(--color-accent-hover);
         }
     </style>
 </head>
@@ -355,32 +358,967 @@
         <div class="chat-box" id="chatBox">
             <div class="chat-container bot">
                 <div class="chat-entry">
-                    Welcome to the **AI Assistant**! I'm ready to help you with your queries. How can I assist you today?
+                    <p><strong>Welcome to Oilseed & Agriculture Assistant! 🌾</strong></p>
+                    <p>I can help you with information about:</p>
+                    <ul>
+                        <li>Oilseeds (Soybean, Mustard, Groundnut, Sunflower, etc.)</li>
+                        <li>Oilseed by-products and processing</li>
+                        <li>Government subsidies and schemes</li>
+                        <li>Market prices and cultivation practices</li>
+                    </ul>
+                    <p>What would you like to know?</p>
                 </div>
+            </div>
+            <div class="suggestion-chips">
+                <button class="chip" onclick="askQuestion('What subsidies are available?')">Subsidies</button>
+                <button class="chip" onclick="askQuestion('Tell me about soybean')">Soybean Info</button>
+                <button class="chip" onclick="askQuestion('Oilseed by-products')">By-products</button>
+                <button class="chip" onclick="askQuestion('MSP rates')">MSP Rates</button>
             </div>
         </div>
         
         <div class="input-area">
             <div class="input-group">
-                <input type="text" id="userInput" placeholder="Send a message..." onkeydown="handleKey(event)"/>
-                <button onclick="startVoiceInput()">🎤</button>
+                <input type="text" id="userInput" placeholder="Ask about oilseeds, subsidies..." onkeydown="handleKey(event)"/>
                 <button onclick="sendMessage()">➤</button>
             </div>
         </div>
     </div>
 
 <script>
-    const openRouterAPIKey = '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';
     let currentChatId = 0;
-    
     let allChatHistories = {
         0: [
-            { sender: 'bot', content: "Welcome to the **AI Assistant**! I'm ready to help you with your queries. How can I assist you today?" }
+            { sender: 'bot', content: "Welcome to Oilseed & Agriculture Assistant! 🌾\n\nI can help you with:\n- Oilseeds (Soybean, Mustard, Groundnut, Sunflower, etc.)\n- Oilseed by-products and processing\n- Government subsidies and schemes\n- Market prices and cultivation practices\n\nWhat would you like to know?" }
         ]
     };
     let nextChatId = 1;
 
-    /* --- Mobile Sidebar Toggle --- */
+    // Lemmatization mapping (simplified)
+    const lemmaMap = {
+        'subsidies': ['subsidy', 'subsidies', 'scheme', 'schemes', 'benefit', 'benefits', 'aid', 'support'],
+        'price': ['price', 'prices', 'rate', 'rates', 'cost', 'costs', 'msp'],
+        'cultivation': ['cultivate', 'cultivation', 'grow', 'growing', 'farming', 'farm', 'plant', 'planting'],
+        'soybean': ['soybean', 'soybeans', 'soya', 'soy'],
+        'mustard': ['mustard', 'sarson', 'rai'],
+        'groundnut': ['groundnut', 'groundnuts', 'peanut', 'peanuts', 'mungfali'],
+        'sunflower': ['sunflower', 'sunflowers', 'surajmukhi'],
+        'oil': ['oil', 'oils', 'edible'],
+        'processing': ['process', 'processing', 'extraction', 'extracting', 'refine', 'refining'],
+        'byproduct': ['byproduct', 'by-product', 'cake', 'meal', 'residue', 'waste'],
+        'pmfby': ['pmfby', 'crop insurance', 'insurance', 'fasal bima'],
+        'storage': ['storage', 'storing', 'warehouse', 'warehousing', 'godown'],
+        'export': ['export', 'exports', 'exporting', 'foreign', 'international'],
+        'import': ['import', 'imports', 'importing'],
+    };
+
+    // Comprehensive knowledge base
+    const knowledgeBase = {
+        // SUBSIDIES
+        'government_subsidies': {
+            keywords: ['subsidy', 'scheme', 'government', 'benefit', 'aid', 'support', 'financial', 'assistance'],
+            response: `<strong>Major Government Subsidies for Oilseeds:</strong>
+
+<strong>1. National Food Security Mission - Oilseeds (NFSM-OS):</strong>
+- Financial assistance for seeds, fertilizers, and technology
+- Support for cluster demonstrations
+- Assistance: Up to ₹15,000 per hectare
+
+<strong>2. Pradhan Mantri Fasal Bima Yojana (PMFBY):</strong>
+- Crop insurance for oilseeds
+- Premium: 2% for Kharif, 1.5% for Rabi
+- Covers yield losses due to natural calamities
+
+<strong>3. Minimum Support Price (MSP):</strong>
+- Guaranteed minimum price for oilseeds
+- Updated annually by CACP
+
+<strong>4. Interest Subvention Scheme:</strong>
+- 2% interest subvention on crop loans
+- Additional 3% for timely repayment
+
+<strong>5. Rashtriya Krishi Vikas Yojana (RKVY):</strong>
+- State-specific schemes for oilseed development
+- Infrastructure support
+
+<strong>Apply through:</strong> Local agriculture office, CSC centers, or online portals`
+        },
+        
+        // SOYBEANS
+        'soybean': {
+            keywords: ['soybean', 'soya', 'soy'],
+            response: `<strong>Soybean Cultivation & Information:</strong>
+
+<strong>Overview:</strong>
+- Scientific Name: Glycine max
+- Major producing states: Madhya Pradesh, Maharashtra, Rajasthan
+- Season: Kharif (June-September)
+
+<strong>Varieties:</strong>
+- JS 335, JS 95-60, JS 20-29, JS 20-34
+- RKS 18, MAUS 71, MAUS 158
+
+<strong>Cultivation:</strong>
+- Soil: Well-drained, pH 6.5-7.5
+- Temperature: 25-30°C
+- Rainfall: 500-750mm
+- Sowing: June-July
+- Harvesting: October-November
+- Yield: 12-15 quintals/hectare
+
+<strong>MSP 2024-25:</strong> ₹4,892 per quintal
+
+<strong>Major Uses:</strong>
+- Soybean oil (edible oil)
+- Soybean meal (animal feed)
+- Soy protein, tofu, soy milk
+- Industrial applications
+
+<strong>By-products:</strong>
+- Soybean meal (48% protein)
+- Soy lecithin
+- Soybean hulls`
+        },
+
+        // MUSTARD
+        'mustard': {
+            keywords: ['mustard', 'sarson', 'rai', 'rapeseed'],
+            response: `<strong>Mustard/Rapeseed Cultivation:</strong>
+
+<strong>Overview:</strong>
+- Scientific Name: Brassica juncea
+- Major states: Rajasthan, Haryana, MP, UP
+- Season: Rabi (October-March)
+
+<strong>Varieties:</strong>
+- Pusa Bold, Pusa Mustard 25, Pusa Mustard 27
+- RH 30, RH 406, RH 725
+- Varuna, Kranti, NPJ-112
+
+<strong>Cultivation:</strong>
+- Soil: Loamy, pH 6.0-7.5
+- Temperature: 10-25°C
+- Sowing: October-November
+- Harvesting: February-March
+- Yield: 12-18 quintals/hectare
+
+<strong>MSP 2024-25:</strong> ₹5,650 per quintal
+
+<strong>Uses:</strong>
+- Mustard oil (cooking)
+- Condiments and spices
+- Industrial oil
+
+<strong>By-products:</strong>
+- Mustard oil cake (fertilizer, cattle feed)
+- De-oiled cake (30-36% protein)
+- Mustard husk`
+        },
+
+        // GROUNDNUT
+        'groundnut': {
+            keywords: ['groundnut', 'peanut', 'mungfali'],
+            response: `<strong>Groundnut Cultivation:</strong>
+
+<strong>Overview:</strong>
+- Scientific Name: Arachis hypogaea
+- Major states: Gujarat, Tamil Nadu, Andhra Pradesh
+- Seasons: Kharif & Rabi
+
+<strong>Varieties:</strong>
+- TMV 7, TMV 13, JL 24
+- Kadiri varieties (K-6, K-9)
+- Spanish, Virginia types
+
+<strong>Cultivation:</strong>
+- Soil: Light sandy loam
+- Temperature: 25-30°C
+- Sowing: June-July (Kharif), Oct-Nov (Rabi)
+- Harvesting: 110-140 days
+- Yield: 15-25 quintals/hectare
+
+<strong>MSP 2024-25:</strong>
+- Groundnut in shell: ₹6,377/quintal
+- Groundnut kernel: ₹7,500/quintal
+
+<strong>Uses:</strong>
+- Groundnut oil (premium cooking oil)
+- Peanut butter
+- Roasted/raw consumption
+- Confectionery
+
+<strong>By-products:</strong>
+- Groundnut cake (40-45% protein)
+- Groundnut shells (fuel, board manufacturing)
+- Haulms (cattle feed)`
+        },
+
+        // SUNFLOWER
+        'sunflower': {
+            keywords: ['sunflower', 'surajmukhi'],
+            response: `<strong>Sunflower Cultivation:</strong>
+
+<strong>Overview:</strong>
+- Scientific Name: Helianthus annuus
+- Major states: Karnataka, Maharashtra, AP, Bihar
+- Seasons: Kharif, Rabi, Summer
+
+<strong>Varieties:</strong>
+- KBSH 44, KBSH 53, Phule Bhaskar
+- LSFH 171, DRSF 108, MSFH 17
+
+<strong>Cultivation:</strong>
+- Soil: Well-drained loam, pH 6.5-8.0
+- Temperature: 20-30°C
+- Sowing: Multiple seasons
+- Harvesting: 90-110 days
+- Yield: 12-20 quintals/hectare
+
+<strong>MSP 2024-25:</strong> ₹7,280 per quintal
+
+<strong>Uses:</strong>
+- Premium cooking oil (light, healthy)
+- Birdseed
+- Ornamental purposes
+
+<strong>By-products:</strong>
+- Sunflower meal (28-32% protein)
+- Sunflower husks
+- Sunflower heads (silage)`
+        },
+
+        // SAFFLOWER
+        'safflower': {
+            keywords: ['safflower', 'kusum', 'kardai'],
+            response: `<strong>Safflower Cultivation:</strong>
+
+<strong>Overview:</strong>
+- Scientific Name: Carthamus tinctorius
+- Major states: Maharashtra, Karnataka, MP
+- Season: Rabi (Oct-March)
+
+<strong>Cultivation:</strong>
+- Drought-resistant crop
+- Soil: Medium to deep black soil
+- Temperature: 15-25°C
+- Yield: 8-12 quintals/hectare
+
+<strong>MSP 2024-25:</strong> ₹5,940 per quintal
+
+<strong>Uses:</strong>
+- Cooking oil (high linoleic acid)
+- Medicinal uses
+- Dye production (flowers)
+- Cattle feed
+
+<strong>By-products:</strong>
+- Safflower meal
+- Safflower hulls`
+        },
+
+        // NIGER SEED
+        'niger': {
+            keywords: ['niger', 'ramtil', 'kala til'],
+            response: `<strong>Niger Seed Cultivation:</strong>
+
+<strong>Overview:</strong>
+- Scientific Name: Guizotia abyssinica
+- Major states: MP, Chhattisgarh, Odisha, Maharashtra
+- Season: Kharif
+
+<strong>Cultivation:</strong>
+- Grows on marginal lands
+- Minimal input requirement
+- Yield: 3-5 quintals/hectare
+
+<strong>MSP 2024-25:</strong> ₹7,734 per quintal
+
+<strong>Uses:</strong>
+- Cooking oil (rural areas)
+- Birdseed
+- Soap making
+
+<strong>By-products:</strong>
+- Niger seed cake (cattle feed)`
+        },
+
+        // SESAME
+        'sesame': {
+            keywords: ['sesame', 'til', 'gingelly'],
+            response: `<strong>Sesame Cultivation:</strong>
+
+<strong>Overview:</strong>
+- Scientific Name: Sesamum indicum
+- Major states: Gujarat, Rajasthan, MP, West Bengal
+- Seasons: Kharif, Summer
+
+<strong>Varieties:</strong>
+- TKG 22, Gujarat Til 2, RT 346
+- Madhavi, Swetha til
+
+<strong>Cultivation:</strong>
+- Drought-resistant
+- Temperature: 25-35°C
+- Yield: 3-5 quintals/hectare
+
+<strong>MSP 2024-25:</strong> ₹8,635 per quintal
+
+<strong>Uses:</strong>
+- Premium quality oil (cooking, cosmetics)
+- Bakery products
+- Traditional sweets
+- Tahini paste
+
+<strong>By-products:</strong>
+- Sesame meal (cake)`
+        },
+
+        // OIL EXTRACTION
+        'oil_extraction': {
+            keywords: ['extraction', 'processing', 'oil', 'crush', 'mill'],
+            response: `<strong>Oilseed Processing & Extraction:</strong>
+
+<strong>Methods of Oil Extraction:</strong>
+
+<strong>1. Mechanical Pressing (Expeller):</strong>
+- Traditional method
+- Oil recovery: 65-75%
+- Produces oil cake with 6-8% residual oil
+- Suitable for small-scale operations
+
+<strong>2. Solvent Extraction:</strong>
+- Uses hexane solvent
+- Oil recovery: 98-99%
+- Produces de-oiled cake (<1% oil)
+- Large-scale industrial process
+
+<strong>3. Pre-press Solvent Extraction:</strong>
+- Combination method
+- Higher efficiency
+- Modern industrial standard
+
+<strong>Processing Steps:</strong>
+1. Cleaning & Drying
+2. Dehulling/Decorticating
+3. Crushing/Grinding
+4. Conditioning (heating)
+5. Oil extraction
+6. Filtration & Refining
+7. Packaging
+
+<strong>Refining Process:</strong>
+- Degumming
+- Neutralization
+- Bleaching
+- Deodorization
+- Winterization (for sunflower)
+
+<strong>Equipment Required:</strong>
+- Seed cleaner
+- Decorticator
+- Oil expeller/mill
+- Filter press
+- Storage tanks`
+        },
+
+        // BY-PRODUCTS
+        'byproducts': {
+            keywords: ['byproduct', 'by-product', 'cake', 'meal', 'residue', 'waste'],
+            response: `<strong>Oilseed By-products & Uses:</strong>
+
+<strong>1. Oil Cakes/Meals:</strong>
+High-protein animal feed and organic fertilizer
+
+<strong>Soybean Meal:</strong>
+- Protein: 44-48%
+- Best poultry/livestock feed
+- Aquaculture feed
+- Price: ₹35-45/kg
+
+<strong>Groundnut Cake:</strong>
+- Protein: 40-45%
+- Cattle feed (excellent quality)
+- Organic manure
+- Price: ₹30-40/kg
+
+<strong>Mustard Cake:</strong>
+- Protein: 30-36%
+- Bio-fertilizer (sulfur-rich)
+- Cattle feed (limited)
+- Neem cake alternative
+- Price: ₹20-30/kg
+
+<strong>Sunflower Meal:</strong>
+- Protein: 28-32%
+- Livestock feed
+- Price: ₹25-35/kg
+
+<strong>2. Hulls/Shells:</strong>
+- Fuel source (biomass)
+- Board manufacturing
+- Bedding material
+
+<strong>3. Soapstock:</strong>
+- Soap manufacturing
+- Industrial fatty acids
+
+<strong>4. Lecithin (from soybean):</strong>
+- Food emulsifier
+- Pharmaceutical applications
+- Cosmetics
+
+<strong>5. Glycerol:</strong>
+- From oil refining
+- Pharmaceutical, cosmetic uses
+
+<strong>Commercial Value:</strong>
+By-products contribute 30-40% of total oilseed industry revenue`
+        },
+
+        // MSP RATES
+        'msp': {
+            keywords: ['msp', 'minimum support price', 'price', 'rate', 'support'],
+            response: `<strong>Minimum Support Prices (MSP) 2024-25:</strong>
+
+<strong>Kharif Oilseeds:</strong>
+- Groundnut in shell: ₹6,377/quintal
+- Soybean (Yellow): ₹4,892/quintal
+- Sunflower: ₹7,280/quintal
+- Sesamum: ₹8,635/quintal
+- Niger Seed: ₹7,734/quintal
+
+<strong>Rabi Oilseeds:</strong>
+- Rapeseed/Mustard: ₹5,650/quintal
+- Safflower: ₹5,940/quintal
+- Linseed: ₹7,175/quintal
+
+<strong>About MSP:</strong>
+- Announced by Government of India annually
+- Based on CACP recommendations
+- Covers cost of production + profit margin
+- Procurement by government agencies
+
+<strong>MSP Benefit:</strong>
+- Price security for farmers
+- Encourages oilseed cultivation
+- Market price stabilization
+
+<strong>How to Sell at MSP:</strong>
+1. Register at APMC/Mandi
+2. Bring produce to designated centers
+3. Government agencies (NAFED, etc.) purchase
+4. Direct payment to farmer account
+
+<strong>Note:</strong> MSP is reviewed annually. Always check latest rates`
+        },
+
+        // PMFBY
+        'pmfby': {
+            keywords: ['pmfby', 'crop insurance', 'insurance', 'fasal bima'],
+            response: `<strong>Pradhan Mantri Fasal Bima Yojana (PMFBY):</strong>
+
+<strong>Coverage for Oilseeds:</strong>
+Comprehensive crop insurance for all oilseeds
+
+<strong>Premium Rates:</strong>
+- Kharif Crops: 2% (farmer's share)
+- Rabi Crops: 1.5% (farmer's share)
+- Balance paid by government
+
+<strong>Coverage Includes:</strong>
+- Crop loss due to natural calamities
+- Pest/disease attacks
+- Landslides, floods, droughts
+- Post-harvest losses (up to 14 days)
+- Prevented sowing
+
+<strong>Sum Insured:</strong>
+Scale of finance × area × insurance coverage
+
+<strong>How to Apply:</strong>
+1. Visit nearest bank/CSC
+2. Submit land documents
+3. Pay nominal premium
+4. Coverage starts from sowing
+
+<strong>Claims Process:</strong>
+- Automated based on crop cutting experiments
+- Direct payment to bank account
+- No need to file individual claims
+
+<strong>Helpline:</strong> 011-23382012
+<strong>Portal:</strong> pmfby.gov.in
+
+<strong>Note:</strong> Enrollment compulsory for loanee farmers, voluntary for others`
+        },
+
+        // NFSM
+        'nfsm': {
+            keywords: ['nfsm', 'national food security mission', 'mission'],
+            response: `<strong>National Food Security Mission - Oilseeds (NFSM-OS):</strong>
+
+<strong>Objective:</strong>
+Increase oilseed production and productivity
+
+<strong>Financial Assistance:</strong>
+
+<strong>1. Seed Distribution:</strong>
+- Certified seed: 50% subsidy (max ₹600/ha)
+- HYV seed: Up to ₹2,000/ha
+
+<strong>2. Cluster Demonstrations:</strong>
+- Assistance: ₹15,000/ha
+- Technology adoption support
+
+<strong>3. Plant Protection:</strong>
+- Sprayers: 50% subsidy
+- Pesticides support
+
+<strong>4. Micro-nutrients:</strong>
+- Soil health improvement: ₹750/ha
+
+<strong>5. Training & Capacity Building:</strong>
+- Farmer field schools
+- Exposure visits
+
+<strong>Apply Through:</strong>
+- District Agriculture Office
+- State Agriculture Department
+- Online portals (state-specific)
+
+<strong>Target States:</strong>
+All major oilseed producing states
+
+<strong>Expected Impact:</strong>
+- Production increase by 4-5 million tonnes
+- Productivity enhancement
+- Self-sufficiency in edible oils`
+        },
+
+        // STORAGE
+        'storage': {
+            keywords: ['storage', 'warehouse', 'godown', 'storing'],
+            response: `<strong>Oilseed Storage & Warehousing:</strong>
+
+<strong>Proper Storage Requirements:</strong>
+
+<strong>Pre-storage Preparation:</strong>
+- Moisture content: 9-10% (critical)
+- Clean and dry seeds
+- Fumigation if needed
+- Proper packaging (jute bags/HDPE)
+
+<strong>Storage Conditions:</strong>
+- Temperature: Below 25°C
+- Humidity: Below 60%
+- Well-ventilated area
+- Pest-free environment
+- Raised platform storage
+
+<strong>Government Warehousing Schemes:</strong>
+
+<strong>1. Warehouse Receipt System (WRS):</strong>
+- Store produce in accredited warehouse
+- Get negotiable warehouse receipt
+- Use as collateral for loans
+- Avoid distress sale
+
+<strong>2. CWC/SWC Warehouses:</strong>
+- Central/State Warehousing Corporation
+- Scientific storage facilities
+- Rental: ₹1-2 per quintal per month
+
+<strong>3. Gramin Bhandaran Yojana:</strong>
+- Subsidy for building warehouses
+- Up to 33% capital subsidy
+- Loan available at lower rates
+
+<strong>Storage Pests:</strong>
+- Khapra beetle, weevils
+- Use approved fumigants
+- Regular inspection
+
+<strong>Duration:</strong>
+- Safe storage: 6-12 months (if proper conditions)
+
+<strong>Benefits:</strong>
+- Reduced post-harvest losses (10-15%)
+- Better market prices
+- Year-round availability`
+        },
+
+        // MARKET & EXPORT
+        'market': {
+            keywords: ['market', 'export', 'import', 'trade', 'price'],
+            response: `<strong>Oilseed Market & Trade Information:</strong>
+
+<strong>Major Oilseed Markets (APMCs):</strong>
+
+<strong>Soybean:</strong>
+- Indore (MP) - largest market
+- Bhopal, Ujjain, Dewas
+- Akola, Latur (Maharashtra)
+
+<strong>Groundnut:</strong>
+- Rajkot, Gondal (Gujarat)
+- Junagadh, Amreli
+
+<strong>Mustard:</strong>
+- Jaipur, Alwar (Rajasthan)
+- Bharatpur, Morena
+
+<strong>Current Market Scenario:</strong>
+- India imports 55-60% of edible oil requirement
+- Major imports: Palm oil, soybean oil, sunflower oil
+- Self-sufficiency target: 2028-30
+
+<strong>Export Opportunities:</strong>
+
+<strong>Groundnut:</strong>
+- Major export item
+- Destinations: Indonesia, Philippines, Malaysia
+- Export value: $500-600 million annually
+
+<strong>Sesame:</strong>
+- Strong export demand
+- Japan, China, Middle East markets
+
+<strong>Castor Oil:</strong>
+- India is world's largest producer & exporter
+- 90% global share
+
+<strong>Government Initiatives:</strong>
+- National Edible Oil Mission - Oil Palm (NMEO-OP)
+- Import duty regulation
+- Export incentives for value-added products
+
+<strong>Market Intelligence:</strong>
+- Check Agmarknet for daily prices
+- NAFED website for MSP updates
+- Commodity exchanges (NCDEX, MCX)
+
+<strong>Price Influencing Factors:</strong>
+- Global crude oil prices
+- International edible oil prices
+- Monsoon performance
+- Government policies`
+        },
+
+        // CULTIVATION PRACTICES
+        'cultivation': {
+            keywords: ['cultivation', 'farming', 'grow', 'plant', 'sowing'],
+            response: `<strong>General Oilseed Cultivation Practices:</strong>
+
+<strong>Land Preparation:</strong>
+- Deep ploughing (summer)
+- 2-3 harrowing for fine tilth
+- Proper drainage arrangement
+- Leveling for uniform irrigation
+
+<strong>Seed Treatment:</strong>
+- Fungicide treatment (Thiram/Carbendazim)
+- Rhizobium culture (for soybean, groundnut)
+- PSB (Phosphate Solubilizing Bacteria)
+
+<strong>Sowing:</strong>
+- Seed rate varies by crop
+- Row-to-row spacing critical
+- Seed depth: 3-5 cm
+- Use seed drill for uniform spacing
+
+<strong>Fertilizer Application:</strong>
+
+<strong>Soybean/Groundnut (legumes):</strong>
+- N:P:K = 20:60:40 kg/ha
+- Reduced nitrogen (self-fixing)
+
+<strong>Mustard/Sunflower:</strong>
+- N:P:K = 80:40:40 kg/ha
+- Split application recommended
+
+<strong>Micronutrients:</strong>
+- Sulfur: Critical for oilseeds (20-40 kg/ha)
+- Boron: Improves oil content
+- Zinc: For deficient soils
+
+<strong>Irrigation:</strong>
+- Critical stages: Flowering, pod formation
+- Soybean: 2-3 irrigations
+- Mustard: 2-4 irrigations
+- Groundnut: 4-6 irrigations
+- Drip irrigation most efficient
+
+<strong>Weed Management:</strong>
+- Pre-emergence herbicides
+- Inter-cultivation (20-30 DAS)
+- Hand weeding if needed
+
+<strong>Pest Management:</strong>
+- IPM practices recommended
+- Neem-based pesticides
+- Chemical control as last resort
+- Pheromone traps
+
+<strong>Disease Management:</strong>
+- Crop rotation
+- Resistant varieties
+- Timely spraying
+- Proper drainage
+
+<strong>Harvesting:</strong>
+- Harvest at physiological maturity
+- Avoid over-drying in field
+- Thresh within 2-3 days
+- Dry to 9-10% moisture`
+        },
+
+        // SOIL HEALTH
+        'soil': {
+            keywords: ['soil', 'fertility', 'testing', 'ph', 'nutrients'],
+            response: `<strong>Soil Health for Oilseed Cultivation:</strong>
+
+<strong>Ideal Soil Types:</strong>
+
+<strong>Soybean:</strong> Well-drained loamy, black soil
+<strong>Mustard:</strong> Loamy to clay loam
+<strong>Groundnut:</strong> Light sandy loam
+<strong>Sunflower:</strong> Wide adaptability, prefers loam
+<strong>Safflower:</strong> Deep black soil
+
+<strong>Soil pH Requirements:</strong>
+- Soybean: 6.5-7.5
+- Mustard: 6.0-7.5
+- Groundnut: 6.0-7.0
+- Sunflower: 6.5-8.0
+
+<strong>Soil Testing:</strong>
+- Test every 2-3 years
+- Free/subsidized at KVK, Agriculture office
+- Tests: NPK, pH, organic carbon, micronutrients
+
+<strong>Soil Health Card Scheme:</strong>
+- Free soil testing
+- Crop-wise recommendations
+- Available at all districts
+- Every farmer eligible
+
+<strong>Soil Improvement:</strong>
+- Organic matter: 5-10 tonnes FYM/ha
+- Green manuring (sunhemp, dhaincha)
+- Crop rotation with legumes
+- Lime application (acidic soils)
+- Gypsum (alkaline soils)
+
+<strong>Nutrient Management:</strong>
+- Balanced fertilization
+- Organic manure integration
+- Biofertilizers (Rhizobium, PSB, Azotobacter)
+- Avoid excessive nitrogen in oilseeds
+
+<strong>Soil Conservation:</strong>
+- Contour farming on slopes
+- Bunding and terracing
+- Cover crops
+- Mulching`
+        },
+
+        // ORGANIC FARMING
+        'organic': {
+            keywords: ['organic', 'natural', 'bio', 'chemical-free'],
+            response: `<strong>Organic Oilseed Farming:</strong>
+
+<strong>Organic Certification:</strong>
+- NPOP (National Programme for Organic Production)
+- 3-year conversion period
+- Premium prices (20-30% higher)
+- Growing export demand
+
+<strong>Organic Inputs:</strong>
+
+<strong>Manures:</strong>
+- FYM: 10-15 tonnes/ha
+- Vermicompost: 5 tonnes/ha
+- Compost: 8-10 tonnes/ha
+- Green manure crops
+
+<strong>Biofertilizers:</strong>
+- Rhizobium (legumes)
+- Azotobacter (non-legumes)
+- PSB (all crops)
+- Mycorrhiza
+
+<strong>Organic Pest Control:</strong>
+- Neem oil spray
+- Panchagavya
+- Dashaparni ark
+- Neemastra, Brahmastra
+- Pheromone traps
+- Light traps
+
+<strong>Disease Management:</strong>
+- Trichoderma (seed treatment)
+- Pseudomonas
+- Cow urine formulations
+- Crop rotation
+
+<strong>Weed Management:</strong>
+- Mulching
+- Inter-cultivation
+- Hand weeding
+- Cover crops (competitive)
+
+<strong>Government Support:</strong>
+- Paramparagat Krishi Vikas Yojana (PKVY)
+- ₹50,000/ha assistance over 3 years
+- Cluster formation (50 ha)
+- Certification support
+
+<strong>Market Linkages:</strong>
+- Organic mandis
+- Export opportunities
+- Direct marketing
+- FPOs/cooperatives
+
+<strong>Benefits:</strong>
+- Soil health improvement
+- Higher net returns
+- Environmental sustainability
+- Premium market access`
+        },
+
+        // LOANS & CREDIT
+        'loan': {
+            keywords: ['loan', 'credit', 'kisan', 'kcc', 'finance', 'bank'],
+            response: `<strong>Agricultural Loans for Oilseed Farmers:</strong>
+
+<strong>1. Kisan Credit Card (KCC):</strong>
+- Flexible crop loan
+- Interest: 7% (with subvention)
+- Additional 3% for timely repayment (effective 4%)
+- Limit based on land holding
+- Insurance cover included
+
+<strong>How to Apply:</strong>
+- Visit nearest bank
+- Documents: Land records, Aadhaar, PAN
+- Processing: 7-15 days
+
+<strong>2. Crop Loans:</strong>
+- Short-term loans (up to 12 months)
+- Scale of finance based on crop/area
+- Interest subvention available
+
+<strong>Scale of Finance (per hectare):</strong>
+- Soybean: ₹25,000-30,000
+- Groundnut: ₹35,000-40,000
+- Mustard: ₹20,000-25,000
+- Sunflower: ₹25,000-30,000
+
+<strong>3. Term Loans:</strong>
+For farm equipment, irrigation, warehousing
+- Tenure: 5-7 years
+- Interest: 9-12%
+- Subsidy available under various schemes
+
+<strong>4. NABARD Schemes:</strong>
+- Rural Infrastructure Development Fund
+- Warehouse financing
+- Agricultural marketing infrastructure
+
+<strong>5. Mudra Loans:</strong>
+For small processing units
+- Up to ₹10 lakhs
+- No collateral needed
+
+<strong>Insurance Coverage:</strong>
+- PMFBY crop insurance auto-attached to KCC
+- Personal accident cover
+- Asset insurance option
+
+<strong>Loan Waiver Information:</strong>
+Check state-specific schemes
+
+<strong>Tips:</strong>
+- Maintain good credit history
+- Timely repayment for lower interest
+- Keep land records updated
+- Link Aadhaar for DBT`
+        },
+
+        // PROCESSING UNITS
+        'processing_unit': {
+            keywords: ['mill', 'plant', 'unit', 'factory', 'business', 'setup'],
+            response: `<strong>Setting Up Oilseed Processing Unit:</strong>
+
+<strong>Types of Units:</strong>
+
+<strong>1. Small-scale Oil Mill (Ghani/Expeller):</strong>
+- Capacity: 1-5 tonnes/day
+- Investment: ₹5-15 lakhs
+- Power: 10-20 HP
+- Space: 500-1000 sq ft
+- Staff: 2-4 persons
+
+<strong>2. Medium-scale Mill:</strong>
+- Capacity: 10-50 tonnes/day
+- Investment: ₹50 lakhs - 2 crores
+- Complete extraction line
+- Space: 2000-5000 sq ft
+
+<strong>3. Large-scale Solvent Extraction:</strong>
+- Capacity: 100+ tonnes/day
+- Investment: ₹10+ crores
+- Automated processing
+- Large land requirement
+
+<strong>Required Licenses:</strong>
+- FSSAI License (mandatory)
+- Trade License (Municipal)
+- Pollution Control Board clearance
+- Fire Safety NOC
+- GST Registration
+- Factory License (medium/large)
+
+<strong>Equipment Required (Small unit):</strong>
+- Seed cleaner: ₹50,000-1 lakh
+- Decorticator: ₹1-2 lakhs
+- Oil expeller: ₹2-5 lakhs
+- Filter press: ₹50,000-1 lakh
+- Storage tanks: ₹1-2 lakhs
+- Packaging machine: ₹50,000-1 lakh
+
+<strong>Government Schemes:</strong>
+- PMEGP (Prime Minister's Employment Generation Programme)
+- Subsidy: 15-35% of project cost
+- Bank loan at concessional rates
+- NABARD support
+
+<strong>Raw Material Sourcing:</strong>
+- Direct purchase from farmers
+- APMC/Mandis
+- Aggregators/FPOs
+- Contract farming
+
+<strong>Revenue Streams:</strong>
+- Sale of edible oil
+- Sale of oil cake
+- Value-added products
+- Toll processing
+
+<strong>Profitability:</strong>
+- Depends on capacity & efficiency
+- Typical margin: 8-12% on oil
+- By-product adds 3-5% margin
+- Break-even: 2-4 years
+
+<strong>Key Success Factors:</strong>
+- Location near production area
+- Quality maintenance
+- Branding (small units)
+- Consistent supply chain`
+        }
+    };
+
     function toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.querySelector('.sidebar-overlay');
@@ -388,21 +1326,81 @@
         overlay.classList.toggle('active');
     }
 
-    /* --- Utility Functions --- */
+    function lemmatize(text) {
+        text = text.toLowerCase();
+        const words = text.split(/\s+/);
+        const lemmatized = [];
+        
+        words.forEach(word => {
+            let found = false;
+            for (let [base, variants] of Object.entries(lemmaMap)) {
+                if (variants.includes(word)) {
+                    lemmatized.push(base);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) lemmatized.push(word);
+        });
+        
+        return lemmatized;
+    }
+
+    function matchQuestion(userInput) {
+        const lemmatized = lemmatize(userInput);
+        const inputLower = userInput.toLowerCase();
+        
+        let bestMatch = null;
+        let highestScore = 0;
+        
+        for (let [key, data] of Object.entries(knowledgeBase)) {
+            let score = 0;
+            
+            data.keywords.forEach(keyword => {
+                if (inputLower.includes(keyword)) {
+                    score += 2;
+                }
+                
+                lemmatized.forEach(word => {
+                    if (lemmatize(keyword).includes(word)) {
+                        score += 1;
+                    }
+                });
+            });
+            
+            if (score > highestScore) {
+                highestScore = score;
+                bestMatch = data.response;
+            }
+        }
+        
+        if (highestScore > 1) {
+            return bestMatch;
+        }
+        
+        return null;
+    }
+
     function parseMarkdown(text) {
         let html = text
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
             .replace(/^- (.*)/gm, '<li>$1</li>');
         
-        if (!html.includes('<li>')) {
-            html = html.split('\n').map(p => p.trim()).filter(p => p.length > 0).map(p => `<p>${p}</p>`).join('');
+        if (html.includes('<li>')) {
+            html = html.replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>');
         }
+        
+        html = html.split('\n\n').map(p => {
+            if (!p.includes('<ul>') && !p.includes('<strong>') && p.trim().length > 0) {
+                return `<p>${p}</p>`;
+            }
+            return p;
+        }).join('');
         
         return html;
     }
 
-    /* --- Chat History Management --- */
     function saveCurrentChat(input) {
         allChatHistories[currentChatId] = input;
         
@@ -437,9 +1435,20 @@
             chatBox.appendChild(container);
         });
         
+        if (id === 0) {
+            const suggestions = document.createElement('div');
+            suggestions.className = 'suggestion-chips';
+            suggestions.innerHTML = `
+                <button class="chip" onclick="askQuestion('What subsidies are available?')">Subsidies</button>
+                <button class="chip" onclick="askQuestion('Tell me about soybean')">Soybean Info</button>
+                <button class="chip" onclick="askQuestion('Oilseed by-products')">By-products</button>
+                <button class="chip" onclick="askQuestion('MSP rates')">MSP Rates</button>
+            `;
+            chatBox.appendChild(suggestions);
+        }
+        
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Close sidebar on mobile after selecting chat
         if (window.innerWidth <= 768) {
             toggleSidebar();
         }
@@ -459,13 +1468,12 @@
         
         loadChat(newId);
         
-        const initialMessage = "New chat started. I'm ready when you are!";
+        const initialMessage = "Hello! I'm ready to help you with oilseed and agriculture queries. What would you like to know?";
         appendMessage(initialMessage, 'bot', true);
         allChatHistories[newId].push({ sender: 'bot', content: initialMessage });
         saveCurrentChat(allChatHistories[newId]);
     }
 
-    /* --- Messaging Logic --- */
     function appendMessage(content, sender = 'bot', isMarkdown = false) {
         const chatBox = document.getElementById('chatBox');
         
@@ -473,9 +1481,9 @@
         container.className = `chat-container ${sender}`;
         
         const entry = document.createElement('div');
-        entry.className = (content.indexOf('typing') > -1) ? 'typing' : 'chat-entry';
+        entry.className = 'chat-entry';
         
-        if (isMarkdown && content.indexOf('typing') === -1) {
+        if (isMarkdown && sender === 'bot') {
             entry.innerHTML = parseMarkdown(content);
         } else {
             entry.textContent = content;
@@ -485,16 +1493,14 @@
         chatBox.appendChild(container);
         chatBox.scrollTop = chatBox.scrollHeight;
         
-        if (content.indexOf('typing') === -1) {
-            const currentHistory = allChatHistories[currentChatId];
-            if (currentHistory) {
-                currentHistory.push({ sender, content });
-                saveCurrentChat(currentHistory);
-            }
+        const currentHistory = allChatHistories[currentChatId];
+        if (currentHistory) {
+            currentHistory.push({ sender, content });
+            saveCurrentChat(currentHistory);
         }
     }
     
-    async function sendMessage() {
+    function sendMessage() {
         const input = document.getElementById('userInput');
         const text = input.value.trim();
         if (!text) return;
@@ -502,51 +1508,26 @@
         appendMessage(text, 'user', false);
         input.value = '';
 
-        const typingIndicator = document.createElement('div');
-        typingIndicator.className = 'chat-container bot';
-        typingIndicator.id = 'typingIndicator';
-        typingIndicator.innerHTML = '<div class="typing">AI Assistant is thinking...</div>';
-        document.getElementById('chatBox').appendChild(typingIndicator);
-        document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
-
-        try {
-            const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                    "Authorization": `Bearer ${openRouterAPIKey}`,
-                    "Content-Type": "application/json",
-                    "HTTP-Referer": window.location.href,
-                    "X-Title": "AI Chat Assistant"
-                },
-                body: JSON.stringify({
-                    model: "openai/gpt-4-turbo",
-                    messages: [
-                        {
-                            role: "user",
-                            content: text
-                        }
-                    ],
-                    max_tokens: 1000,
-                    temperature: 0.7
-                })
-            });
-
-            typingIndicator.remove();
-
-            if (res.ok) {
-                const data = await res.json();
-                const botResponse = data.choices?.[0]?.message?.content?.trim() || "Sorry, I encountered an error.";
-                appendMessage(botResponse, 'bot', true);
+        setTimeout(() => {
+            const response = matchQuestion(text);
+            
+            if (response) {
+                appendMessage(response, 'bot', true);
             } else {
-                const errorData = await res.json();
-                console.error('API Error:', errorData);
-                appendMessage("I'm sorry, there was a connection error. Please try again.", 'bot', false);
+                const fallback = `I apologize, but I don't have specific information about that query. 
+
+I can help you with:
+- Oilseeds: Soybean, Mustard, Groundnut, Sunflower, Safflower, Niger, Sesame
+- Government subsidies: PMFBY, NFSM, MSP, KCC loans
+- Oilseed processing and by-products
+- Cultivation practices and soil management
+- Storage and marketing information
+- Setting up processing units
+
+Please ask about any of these topics!`;
+                appendMessage(fallback, 'bot', true);
             }
-        } catch (error) {
-            typingIndicator.remove();
-            console.error('Request failed:', error);
-            appendMessage("I'm sorry, there was a connection error. Please try again.", 'bot', false);
-        }
+        }, 500);
     }
 
     function handleKey(event) {
@@ -554,36 +1535,10 @@
             sendMessage();
         }
     }
-    
-    function startVoiceInput() {
-        if (!('webkitSpeechRecognition' in window)) {
-            alert("Speech Recognition not supported in this browser. Try Chrome or Edge.");
-            return;
-        }
 
-        const recognition = new webkitSpeechRecognition();
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
-        
-        document.getElementById('userInput').placeholder = "Listening...";
-        recognition.start();
-
-        recognition.onresult = function(event) {
-            const transcript = event.results[0][0].transcript;
-            document.getElementById('userInput').value = transcript;
-            document.getElementById('userInput').placeholder = "Send a message...";
-            sendMessage();
-        };
-
-        recognition.onerror = function(event) {
-            console.error('Voice input error:', event.error);
-            document.getElementById('userInput').placeholder = "Send a message...";
-        };
-        
-        recognition.onend = function() {
-            document.getElementById('userInput').placeholder = "Send a message...";
-        };
+    function askQuestion(question) {
+        document.getElementById('userInput').value = question;
+        sendMessage();
     }
 
     window.onload = () => {
