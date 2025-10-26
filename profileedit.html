@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Crop Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .edit-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-nav h1 {
+            color: white;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .message {
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            color: #155724;
+            border-left: 5px solid #28a745;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            color: #721c24;
+            border-left: 5px solid #dc3545;
+        }
+
+        .avatar-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 15px;
+        }
+
+        .avatar-section h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .avatars {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .avatars img {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            border: 4px solid transparent;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .avatars img:hover {
+            transform: scale(1.15);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .avatars img.selected {
+            border-color: #667eea;
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 14px 16px;
+            border: 2px solid #e0e7ff;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: white;
+            color: #333;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #aaa;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .save-btn, .cancel-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .cancel-btn {
+            background: #f3f4f6;
+            color: #666;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .cancel-btn:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .header-nav h1 {
+                font-size: 1.5em;
+            }
+
+            .content-section {
+                padding: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .save-btn, .cancel-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .avatars img {
+                width: 80px;
+                height: 80px;
+            }
+        }
+
+        .loading {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-container">
+        <div class="header-nav">
+            <h1>✏️ Edit Profile</h1>
+            <a href="profile.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+        </div>
+
+        <div class="content-section">
+            <div id="message" class="message"></div>
+
+            <div class="avatar-section">
+                <h3><i class="fas fa-user-circle"></i> Choose Your Avatar</h3>
+                <div class="avatars">
+                    <img src="https://i.postimg.cc/VvvM4LLK/4140061.png" alt="Avatar 1" data-avatar="https://i.postimg.cc/VvvM4LLK/4140061.png" />
+                    <img src="https://i.postimg.cc/g0yv2TTH/6833605.png" alt="Avatar 2" data-avatar="https://i.postimg.cc/g0yv2TTH/6833605.png" />
+                    <img src="https://i.postimg.cc/NFFmtc9K/xnz-Mst5-V-400x400.jpg" alt="Avatar 3" data-avatar="https://i.postimg.cc/NFFmtc9K/xnz-Mst5-V-400x400.jpg" />
+                    <img src="https://i.postimg.cc/rwKwFnfR/4139967.png" alt="Avatar 4" data-avatar="https://i.postimg.cc/rwKwFnfR/4139967.png" />
+                    <img src="https://i.postimg.cc/dQNG3d4p/6997484.png" alt="Avatar 5" data-avatar="https://i.postimg.cc/dQNG3d4p/6997484.png" />
+                </div>
+            </div>
+
+            <form id="profileForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Full Name</label>
+                        <input type="text" id="nameInput" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-briefcase"></i> Role</label>
+                        <select id="roleInput" required>
+                            <option value="">Select Role</option>
+                            <option value="Farmer">Farmer</option>
+                            <option value="Patient">Patient</option>
+                            <option value="Doctor">Doctor</option>
+                            <option value="Nurse">Nurse</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="emailInput" placeholder="your.email@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Phone</label>
+                        <input type="tel" id="phoneInput" placeholder="+91 98765 43210" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-phone-volume"></i> Emergency Contact</label>
+                        <input type="tel" id="emergencyContactInput" placeholder="+91 98765 43210" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-birthday-cake"></i> Date of Birth</label>
+                        <input type="date" id="dobInput" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-venus-mars"></i> Gender</label>
+                        <select id="genderInput" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Location</label>
+                        <input type="text" id="locationInput" placeholder="City, State, Country" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-language"></i> Preferred Language</label>
+                        <select id="preferredLanguageInput" required>
+                            <option value="">Select Language</option>
+                            <option value="English">English</option>
+                            <option value="Bengali">Bengali</option>
+                            <option value="Hindi">Hindi</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="save-btn" id="saveBtn">
+                        <i class="fas fa-save"></i> Save Profile
+                    </button>
+                    <button type="button" class="cancel-btn" onclick="window.location.href='profile.html'">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Default profile data
+        let profileData = {
+            avatar: "https://i.postimg.cc/NFFmtc9K/xnz-Mst5-V-400x400.jpg",
+            name: "Rajesh Kumar",
+            email: "rajesh.kumar@cropmarket.com",
+            phone: "+91 98765 43210",
+            emergencyContact: "+91 98392 81988",
+            dob: "1985-03-15",
+            gender: "Male",
+            location: "Punjab, India",
+            preferredLanguage: "Hindi",
+            role: "Farmer",
+            walletBalance: "450.00",
+            farmAddress: "Village: Jalalpur, District: Ludhiana, Punjab - 141001"
+        };
+
+        let selectedAvatar = profileData.avatar;
+
+        // Load saved data from storage
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const result = await window.storage.get('profile-data');
+                if (result && result.value) {
+                    profileData = JSON.parse(result.value);
+                    selectedAvatar = profileData.avatar;
+                }
+            } catch (error) {
+                console.log('Loading default profile data');
+            }
+
+            // Populate form
+            document.getElementById("nameInput").value = profileData.name || "";
+            document.getElementById("emailInput").value = profileData.email || "";
+            document.getElementById("phoneInput").value = profileData.phone || "";
+            document.getElementById("emergencyContactInput").value = profileData.emergencyContact || "";
+            document.getElementById("dobInput").value = profileData.dob || "";
+            document.getElementById("genderInput").value = profileData.gender || "";
+            document.getElementById("locationInput").value = profileData.location || "";
+            document.getElementById("preferredLanguageInput").value = profileData.preferredLanguage || "";
+            document.getElementById("roleInput").value = profileData.role || "";
+
+            // Highlight selected avatar
+            document.querySelectorAll('.avatars img').forEach(img => {
+                if (img.getAttribute('data-avatar') === selectedAvatar) {
+                    img.classList.add('selected');
+                }
+            });
+        });
+
+        // Avatar selection
+        document.querySelectorAll('.avatars img').forEach(img => {
+            img.addEventListener('click', function() {
+                document.querySelectorAll('.avatars img').forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedAvatar = this.getAttribute('data-avatar');
+            });
+        });
+
+        // Validation functions
+        function validateEmail(email) {
+            return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
+        }
+
+        function validatePhone(phone) {
+            return phone.replace(/\D/g, '').length >= 10;
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${text}`;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'flex';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const form = e.target;
+            const saveBtn = document.getElementById('saveBtn');
+            
+            // Get form values
+            const newName = document.getElementById("nameInput").value.trim();
+            const newEmail = document.getElementById("emailInput").value.trim();
+            const newPhone = document.getElementById("phoneInput").value.trim();
+            const newEmergencyContact = document.getElementById("emergencyContactInput").value.trim();
+            const newDOB = document.getElementById("dobInput").value.trim();
+            const newGender = document.getElementById("genderInput").value;
+            const newLocation = document.getElementById("locationInput").value.trim();
+            const newPreferredLanguage = document.getElementById("preferredLanguageInput").value;
+            const newRole = document.getElementById("roleInput").value;
+
+            // Validate
+            if (!newName || !newEmail || !newPhone || !newEmergencyContact || !newDOB || 
+                !newGender || !newLocation || !newPreferredLanguage || !newRole) {
+                showMessage('Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (!validateEmail(newEmail)) {
+                showMessage('Please enter a valid email address', 'error');
+                return;
+            }
+
+            if (!validatePhone(newPhone)) {
+                showMessage('Phone number must be at least 10 digits', 'error');
+                return;
+            }
+
+            if (!validatePhone(newEmergencyContact)) {
+                showMessage('Emergency contact must be at least 10 digits', 'error');
+                return;
+            }
+
+            // Disable button during save
+            saveBtn.classList.add('loading');
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            // Update profile data
+            profileData = {
+                ...profileData,
+                avatar: selectedAvatar,
+                name: newName,
+                email: newEmail,
+                phone: newPhone,
+                emergencyContact: newEmergencyContact,
+                dob: newDOB,
+                gender: newGender,
+                location: newLocation,
+                preferredLanguage: newPreferredLanguage,
+                role: newRole
+            };
+
+            // Save to storage
+            try {
+                await window.storage.set('profile-data', JSON.stringify(profileData));
+                showMessage('✅ Profile saved successfully! Redirecting...', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = "profile.html";
+                }, 1500);
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showMessage('❌ Error saving profile. Please try again.', 'error');
+                saveBtn.classList.remove('loading');
+                saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Profile';
+            }
+        });
+    </script>
+</body>
+</html>

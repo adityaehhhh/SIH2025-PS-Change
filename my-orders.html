@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Farmer App</title>
+    <link rel="stylesheet" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #fef9e7 0%, #fdeaa3 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .header-title {
+            flex: 1;
+        }
+
+        .header-title h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .header-title p {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .filter-tabs::-webkit-scrollbar-thumb {
+            background: #fbbf24;
+            border-radius: 10px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: white;
+            border-color: #f59e0b;
+        }
+
+        .filter-tab:hover:not(.active) {
+            border-color: #fbbf24;
+        }
+
+        .orders-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid;
+            transition: all 0.3s;
+        }
+
+        .order-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+        }
+
+        .order-card.pending {
+            border-left-color: #f59e0b;
+        }
+
+        .order-card.in-transit {
+            border-left-color: #3b82f6;
+        }
+
+        .order-card.delivered {
+            border-left-color: #10b981;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .order-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .order-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .order-type {
+            font-size: 12px;
+            color: #6b7280;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .type-badge {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .type-badge.oilseed {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .type-badge.byproduct {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .type-badge.marketplace {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .order-date {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .order-status.pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .order-status.in-transit {
+            background: #dbeafe;
+            color: #2563eb;
+        }
+
+        .order-status.delivered {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .order-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .coin-value {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #f59e0b;
+        }
+
+        .coin-icon-small {
+            width: 18px;
+            height: 18px;
+            background: #f59e0b;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .order-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .track-btn, .reorder-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .track-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+
+        .track-btn:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+        }
+
+        .reorder-btn {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .reorder-btn:hover {
+            background: #e5e7eb;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .popup-header h3 {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .close-popup {
+            width: 32px;
+            height: 32px;
+            background: #f3f4f6;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-popup:hover {
+            background: #e5e7eb;
+        }
+
+        #map {
+            width: 100%;
+            height: 350px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #e5e7eb;
+        }
+
+        .map-legend {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.home {
+            background: #10b981;
+        }
+
+        .legend-dot.truck {
+            background: #3b82f6;
+        }
+
+        .legend-text {
+            font-size: 12px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .track-info {
+            padding: 15px;
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .track-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+
+        .track-info p {
+            font-size: 13px;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 15px;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 480px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-top">
+                <button class="back-btn" onclick="window.history.back()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <div class="header-title">
+                    <h1>My Orders</h1>
+                    <p>Track and manage your orders</p>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterOrders('all')">All Orders</button>
+                <button class="filter-tab" onclick="filterOrders('in-transit')">In Transit</button>
+                <button class="filter-tab" onclick="filterOrders('pending')">Pending</button>
+                <button class="filter-tab" onclick="filterOrders('delivered')">Delivered</button>
+            </div>
+        </div>
+
+        <!-- Orders Container -->
+        <div class="orders-container" id="ordersContainer"></div>
+    </div>
+
+    <!-- Track Order Popup -->
+    <div class="popup-overlay" id="trackPopup">
+        <div class="popup">
+            <div class="popup-header">
+                <h3>Track Order</h3>
+                <button class="close-popup" onclick="closePopup()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <div id="map"></div>
+            
+            <div class="map-legend">
+                <div class="legend-item">
+                    <div class="legend-dot home"></div>
+                    <span class="legend-text">Your Location</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot truck"></div>
+                    <span class="legend-text">Delivery Truck</span>
+                </div>
+            </div>
+
+            <div class="track-info" id="trackInfo"></div>
+        </div>
+    </div>
+
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.0/maps/maps-web.min.js"></script>
+    <script>
+        const orders = [
+            { 
+                id: 1, 
+                product: 'Soybean Meal (44% Protein)', 
+                type: 'byproduct', 
+                quantity: '50 kg', 
+                status: 'in-transit', 
+                date: '2025-10-25', 
+                estimatedDelivery: '2025-10-27',
+                coins: 160,
+                orderNumber: 'ORD-2025-001',
+                trackLocation: { lat: 28.6200, lng: 77.2100 }
+            },
+            { 
+                id: 2, 
+                product: 'Groundnut Cake', 
+                type: 'byproduct', 
+                quantity: '30 kg', 
+                status: 'in-transit', 
+                date: '2025-10-24', 
+                estimatedDelivery: '2025-10-28',
+                coins: 66,
+                orderNumber: 'ORD-2025-002',
+                trackLocation: { lat: 28.6500, lng: 77.2500 }
+            },
+            { 
+                id: 3, 
+                product: 'Sunflower Meal (36% Protein)', 
+                type: 'byproduct', 
+                quantity: '40 kg', 
+                status: 'pending', 
+                date: '2025-10-23', 
+                estimatedDelivery: '2025-10-29',
+                coins: 84,
+                orderNumber: 'ORD-2025-003'
+            },
+            { 
+                id: 4, 
+                product: 'NPK Fertilizer', 
+                type: 'marketplace', 
+                quantity: '1 kg', 
+                status: 'delivered', 
+                date: '2025-10-20', 
+                deliveredOn: '2025-10-22',
+                coins: 50,
+                orderNumber: 'ORD-2025-004'
+            },
+            { 
+                id: 5, 
+                product: 'Mustard Seeds', 
+                type: 'oilseed', 
+                quantity: '100 kg', 
+                status: 'delivered', 
+                date: '2025-10-15', 
+                deliveredOn: '2025-10-18',
+                coins: 0,
+                orderNumber: 'ORD-2025-005'
+            },
+            { 
+                id: 6, 
+                product: 'Crop Insurance - 3 Month', 
+                type: 'marketplace', 
+                quantity: '1 policy', 
+                status: 'delivered', 
+                date: '2025-10-10', 
+                deliveredOn: '2025-10-10',
+                coins: 80,
+                orderNumber: 'ORD-2025-006'
+            },
+            { 
+                id: 7, 
+                product: 'Cottonseed Meal', 
+                type: 'byproduct', 
+                quantity: '25 kg', 
+                status: 'delivered', 
+                date: '2025-10-08', 
+                deliveredOn: '2025-10-12',
+                coins: 65,
+                orderNumber: 'ORD-2025-007'
+            },
+            { 
+                id: 8, 
+                product: 'Urea', 
+                type: 'marketplace', 
+                quantity: '1 kg', 
+                status: 'delivered', 
+                date: '2025-10-05', 
+                deliveredOn: '2025-10-08',
+                coins: 30,
+                orderNumber: 'ORD-2025-008'
+            }
+        ];
+
+        const homeLocation = { lat: 28.6139, lng: 77.2090 }; // Delhi
+        let currentMap = null;
+        let currentFilter = 'all';
+
+        function renderOrders(filter = 'all') {
+            const container = document.getElementById('ordersContainer');
+            const filteredOrders = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11V6l5-3 5 3v5"/>
+                            <path d="M9 11a5 5 0 0 0 10 0"/>
+                            <path d="M3 18l3 3 3-3"/>
+                            <path d="M6 21v-9"/>
+                            <path d="M21 18l-3 3-3-3"/>
+                            <path d="M18 21v-9"/>
+                        </svg>
+                        <h3>No Orders Found</h3>
+                        <p>You don't have any ${filter === 'all' ? '' : filter} orders yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            filteredOrders.forEach(order => {
+                const statusText = order.status === 'in-transit' ? 'In Transit' : 
+                                 order.status === 'pending' ? 'Pending' : 'Delivered';
+                
+                const deliveryInfo = order.status === 'delivered' 
+                    ? order.deliveredOn
+                    : order.estimatedDelivery;
+
+                const deliveryLabel = order.status === 'delivered' 
+                    ? 'Delivered On'
+                    : 'Est. Delivery';
+
+                const trackButton = order.status === 'in-transit' 
+                    ? `<button class="track-btn" onclick="trackOrder(${order.id})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Track Order
+                       </button>`
+                    : `<button class="reorder-btn" onclick="reorderItem(${order.id})">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 1l4 4-4 4"/>
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                            <path d="M7 23l-4-4 4-4"/>
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                        </svg>
+                        Reorder
+                       </button>`;
+
+                const card = document.createElement('div');
+                card.className = `order-card ${order.status}`;
+                card.innerHTML = `
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h3>${order.product}</h3>
+                            <div class="order-meta">
+                                <div class="order-type">
+                                    <span class="type-badge ${order.type}">${order.type}</span>
+                                    <span class="order-date">#${order.orderNumber}</span>
+                                </div>
+                                <span class="order-date">Ordered: ${order.date}</span>
+                            </div>
+                        </div>
+                        <span class="order-status ${order.status}">${statusText}</span>
+                    </div>
+                    
+                    <div class="order-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Quantity</span>
+                            <span class="detail-value">${order.quantity}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">${deliveryLabel}</span>
+                            <span class="detail-value">${deliveryInfo}</span>
+                        </div>
+                        ${order.coins ? `
+                        <div class="detail-item">
+                            <span class="detail-label">Coins Redeemed</span>
+                            <span class="detail-value coin-value">
+                                <span class="coin-icon-small">🌾</span>
+                                ${order.coins}
+                            </span>
+                        </div>` : ''}
+                    </div>
+                    
+                    <div class="order-actions">
+                        ${trackButton}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function filterOrders(filter) {
+            currentFilter = filter;
+            const tabs = document.querySelectorAll('.filter-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            renderOrders(filter);
+        }
+
+        function trackOrder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order || !order.trackLocation) return;
+
+            document.getElementById('trackPopup').classList.add('active');
+            
+            setTimeout(() => {
+                initMap(order);
+            }, 100);
+
+            const trackInfoDiv = document.getElementById('trackInfo');
+            trackInfoDiv.innerHTML = `
+                <h4>${order.product}</h4>
+                <p><strong>Order Number:</strong> ${order.orderNumber}</p>
+                <p><strong>Estimated Delivery:</strong> ${order.estimatedDelivery}</p>
+                <p><strong>Status:</strong> Your order is on the way! The delivery truck is approximately 5.2 km away from your location.</p>
+            `;
+        }
+
+        function initMap(order) {
+            const mapDiv = document.getElementById('map');
+            
+            if (currentMap) {
+                currentMap.remove();
+            }
+
+            // Initialize TomTom map
+            currentMap = tt.map({
+                key: 'F1rrGQCS9lK5NTmyULz2GzhyeTyVc6cS', // Replace with your TomTom API key
+                container: mapDiv,
+                center: [homeLocation.lng, homeLocation.lat],
+                zoom: 12
+            });
+
+            // Add home marker
+            const homeMarker = document.createElement('div');
+            homeMarker.style.width = '30px';
+            homeMarker.style.height = '30px';
+            homeMarker.style.backgroundColor = '#10b981';
+            homeMarker.style.borderRadius = '50%';
+            homeMarker.style.border = '3px solid white';
+            homeMarker.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+            
+            new tt.Marker({ element: homeMarker })
+                .setLngLat([homeLocation.lng, homeLocation.lat])
+                .addTo(currentMap);
+
+            // Add truck marker
+            const truckMarker = document.createElement('div');
+            truckMarker.style.width = '30px';
+            truckMarker.style.height = '30px';
+            truckMarker.style.backgroundColor = '#3b82f6';
+            truckMarker.style.borderRadius = '50%';
+            truckMarker.style.border = '3px solid white';
+            truckMarker.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+            truckMarker.innerHTML = '<div style="color: white; font-size: 16px; display: flex; align-items: center; justify-content: center; height: 100%;">🚚</div>';
+            
+            new tt.Marker({ element: truckMarker })
+                .setLngLat([order.trackLocation.lng, order.trackLocation.lat])
+                .addTo(currentMap);
+
+            // Draw route (simplified line)
+            currentMap.on('load', function() {
+                currentMap.addSource('route', {
+                    type: 'geojson',
+                    data: {
+                        type: 'Feature',
+                        properties: {},
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: [
+                                [order.trackLocation.lng, order.trackLocation.lat],
+                                [homeLocation.lng, homeLocation.lat]
+                            ]
+                        }
+                    }
+                });
+
+                currentMap.addLayer({
+                    id: 'route',
+                    type: 'line',
+                    source: 'route',
+                    layout: {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    paint: {
+                        'line-color': '#3b82f6',
+                        'line-width': 4,
+                        'line-dasharray': [2, 2]
+                    }
+                });
+            });
+
+            // Fit bounds to show both markers
+            const bounds = new tt.LngLatBounds();
+            bounds.extend([homeLocation.lng, homeLocation.lat]);
+            bounds.extend([order.trackLocation.lng, order.trackLocation.lat]);
+            currentMap.fitBounds(bounds, { padding: 50 });
+        }
+
+        function closePopup() {
+            document.getElementById('trackPopup').classList.remove('active');
+            if (currentMap) {
+                currentMap.remove();
+                currentMap = null;
+            }
+        }
+
+        function reorderItem(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            alert(`Reorder functionality for "${order.product}" will be implemented soon!`);
+        }
+
+        // Initialize
+        renderOrders();
+    </script>
+</body>
+</html>

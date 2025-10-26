@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer Profile - Crop Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-nav h1 {
+            color: white;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .home-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .home-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        .content-section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-section h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .profile-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #667eea;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 25px;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #667eea;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .profile-name {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .profile-info p {
+            color: #555;
+            margin: 8px 0;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .profile-info p strong {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .edit-profile-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-size: 1em;
+        }
+
+        .edit-profile-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .wallet-section {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 15px;
+            padding: 30px;
+            color: white;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+        }
+
+        .wallet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .wallet-header h3 {
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .wallet-balance {
+            font-size: 3em;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            margin: 20px 0;
+        }
+
+        .wallet-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .wallet-btn {
+            background: rgba(255, 255, 255, 0.95);
+            color: #10b981;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .wallet-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .profile-detail-card {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-detail-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .profile-detail-card h3 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        .profile-detail-card p {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #fff9e6 0%, #fff3cd 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border-left: 5px solid #f59e0b;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .card p {
+            color: #555;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-card h4 {
+            color: #333;
+            font-size: 2em;
+            margin: 10px 0;
+            font-weight: 700;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-info {
+                min-width: 100%;
+            }
+
+            .header-nav h1 {
+                font-size: 1.5em;
+            }
+
+            .wallet-balance {
+                font-size: 2.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="header-nav">
+            <h1>🌾 Farmer Profile</h1>
+            <a href="index.html" class="home-btn">
+                <i class="fas fa-home"></i> Home
+            </a>
+        </div>
+
+        <!-- Wallet Section -->
+        <div class="wallet-section">
+            <div class="wallet-header">
+                <h3><i class="fas fa-wallet"></i> My Wallet</h3>
+                <i class="fas fa-money-bill-wave" style="font-size: 2em;"></i>
+            </div>
+            <div class="wallet-balance">₹<span id="walletBalance">450.00</span></div>
+            <div class="wallet-actions">
+                <button class="wallet-btn" onclick="addFunds()">
+                    <i class="fas fa-plus"></i> Add Funds
+                </button>
+                <button class="wallet-btn" onclick="withdrawFunds()">
+                    <i class="fas fa-arrow-down"></i> Withdraw
+                </button>
+                <button class="wallet-btn" onclick="viewTransactions()">
+                    <i class="fas fa-history"></i> Transaction History
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="content-section">
+            <h2>Your Profile</h2>
+            <div class="profile-card">
+                <div class="profile-header">
+                    <img id="profileImage" src="https://i.postimg.cc/NFFmtc9K/xnz-Mst5-V-400x400.jpg" alt="Profile Image" class="profile-image">
+                    
+                    <div class="profile-info">
+                        <h3 id="profileName" class="profile-name">Rajesh Kumar</h3>
+                        <p><strong>Role:</strong> <span id="profileRole">Farmer</span></p>
+                        <p><strong>Email:</strong> <span id="profileEmail">rajesh.kumar@cropmarket.com</span></p>
+                        <p><strong>Phone:</strong> <span id="profilePhone">+91 98765 43210</span></p>
+                        <p><strong>Emergency Contact:</strong> <span id="profileEmergencyContact">+91 98392 81988</span></p>
+                        <p><strong>Date of Birth:</strong> <span id="profileDOB">15/03/1985</span></p>
+                        <p><strong>Gender:</strong> <span id="profileGender">Male</span></p>
+                        <p><strong>Location:</strong> <span id="profileLocation">Punjab, India</span></p>
+                        <p><strong>Preferred Language:</strong> <span id="profileLanguage">Hindi</span></p>
+                        <p><strong>Last Active:</strong> <span id="lastActive">Today</span></p>
+                    </div>
+                </div>
+                <button class="edit-profile-btn" onclick="window.location.href='profileedit.html'">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="content-section">
+            <h2>My Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <i class="fas fa-box"></i>
+                    <h4 id="totalBatches">24</h4>
+                    <p>Total Batches Sold</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-rupee-sign"></i>
+                    <h4>₹<span id="totalEarnings">45,230</span></h4>
+                    <p>Total Earnings</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-star"></i>
+                    <h4 id="rating">4.8</h4>
+                    <p>Average Rating</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-seedling"></i>
+                    <h4 id="activeCrops">5</h4>
+                    <p>Active Listings</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Details -->
+        <div class="content-section">
+            <h2>Account Details</h2>
+            <div class="profile-details">
+                <div class="profile-detail-card">
+                    <h3><i class="fas fa-map-marker-alt"></i> Farm Address</h3>
+                    <p id="addressText">Village: Jalalpur, District: Ludhiana, Punjab - 141001</p>
+                    <button class="edit-profile-btn" onclick="editAddress()">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </div>
+
+                <div class="profile-detail-card">
+                    <h3><i class="fas fa-lock"></i> Change Password</h3>
+                    <p>Last changed: 15 days ago</p>
+                    <button class="edit-profile-btn" onclick="changePassword()">
+                        <i class="fas fa-key"></i> Change
+                    </button>
+                </div>
+
+                <div class="profile-detail-card">
+                    <h3><i class="fas fa-shield-alt"></i> Privacy Settings</h3>
+                    <p>Visibility: Public</p>
+                    <button class="edit-profile-btn" onclick="editPrivacy()">
+                        <i class="fas fa-cog"></i> Edit
+                    </button>
+                </div>
+
+                <div class="profile-detail-card">
+                    <h3><i class="fas fa-file-invoice"></i> Bank Details</h3>
+                    <p>Account: ****7890 (State Bank)</p>
+                    <button class="edit-profile-btn" onclick="editBankDetails()">
+                        <i class="fas fa-university"></i> Update
+                    </button>
+                </div>
+
+                <div class="profile-detail-card">
+                    <h3><i class="fas fa-certificate"></i> Certifications</h3>
+                    <p>Organic Farming Certificate</p>
+                    <button class="edit-profile-btn" onclick="viewCertificates()">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                </div>
+
+                <div class="profile-detail-card">
+                    <h3><i class="fas fa-tractor"></i> Farm Details</h3>
+                    <p>Land Size: 10 Acres</p>
+                    <button class="edit-profile-btn" onclick="editFarmDetails()">
+                        <i class="fas fa-edit"></i> Update
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <section class="content-section">
+            <h2><i class="fas fa-bell"></i> Recent Notifications</h2>
+            <div class="card">
+                <p><strong>New Order:</strong> Your soybean batch has been purchased for ₹2,500!</p>
+                <button class="edit-profile-btn" onclick="viewNotification(1)">
+                    <i class="fas fa-check"></i> View Details
+                </button>
+            </div>
+            <div class="card">
+                <p><strong>Payment Received:</strong> ₹3,200 has been credited to your wallet.</p>
+                <button class="edit-profile-btn" onclick="viewNotification(2)">
+                    <i class="fas fa-money-bill"></i> View Transaction
+                </button>
+            </div>
+            <div class="card">
+                <p><strong>New Review:</strong> A buyer left you a 5-star review! Keep up the good work.</p>
+                <button class="edit-profile-btn" onclick="viewNotification(3)">
+                    <i class="fas fa-star"></i> View Review
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Storage helper - works with both window.storage and localStorage
+        const StorageHelper = {
+            async get(key) {
+                if (typeof window.storage !== 'undefined' && window.storage) {
+                    try {
+                        return await window.storage.get(key);
+                    } catch (error) {
+                        console.log('window.storage error, falling back to localStorage');
+                        const value = localStorage.getItem(key);
+                        return value ? { value } : null;
+                    }
+                } else {
+                    const value = localStorage.getItem(key);
+                    return value ? { value } : null;
+                }
+            },
+            async set(key, value) {
+                if (typeof window.storage !== 'undefined' && window.storage) {
+                    try {
+                        return await window.storage.set(key, value);
+                    } catch (error) {
+                        console.log('window.storage error, falling back to localStorage');
+                        localStorage.setItem(key, value);
+                        return { key, value };
+                    }
+                } else {
+                    localStorage.setItem(key, value);
+                    return { key, value };
+                }
+            }
+        };
+
+        // Default profile data
+        let profileData = {
+            avatar: "https://i.postimg.cc/NFFmtc9K/xnz-Mst5-V-400x400.jpg",
+            name: "Rajesh Kumar",
+            email: "rajesh.kumar@cropmarket.com",
+            phone: "+91 98765 43210",
+            emergencyContact: "+91 98392 81988",
+            dob: "1985-03-15",
+            gender: "Male",
+            location: "Punjab, India",
+            preferredLanguage: "Hindi",
+            role: "Farmer",
+            walletBalance: "450.00",
+            farmAddress: "Village: Jalalpur, District: Ludhiana, Punjab - 141001"
+        };
+
+        // Format date from YYYY-MM-DD to DD/MM/YYYY
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        // Load profile data on page load
+        document.addEventListener("DOMContentLoaded", async function() {
+            try {
+                const result = await StorageHelper.get('profile-data');
+                if (result && result.value) {
+                    profileData = JSON.parse(result.value);
+                }
+            } catch (error) {
+                console.log('Using default profile data', error);
+            }
+
+            // Update profile information
+            document.getElementById("profileName").textContent = profileData.name;
+            document.getElementById("profileRole").textContent = profileData.role;
+            document.getElementById("profileEmail").textContent = profileData.email;
+            document.getElementById("profilePhone").textContent = profileData.phone;
+            document.getElementById("profileEmergencyContact").textContent = profileData.emergencyContact;
+            document.getElementById("profileDOB").textContent = formatDate(profileData.dob);
+            document.getElementById("profileGender").textContent = profileData.gender;
+            document.getElementById("profileLocation").textContent = profileData.location;
+            document.getElementById("profileLanguage").textContent = profileData.preferredLanguage;
+            document.getElementById("profileImage").src = profileData.avatar;
+            document.getElementById("walletBalance").textContent = parseFloat(profileData.walletBalance).toFixed(2);
+            document.getElementById("addressText").textContent = profileData.farmAddress;
+
+            // Set last active time
+            const now = new Date();
+            const lastActiveTime = now.toLocaleString('en-IN', { 
+                dateStyle: 'medium', 
+                timeStyle: 'short' 
+            });
+            document.getElementById("lastActive").textContent = lastActiveTime;
+        });
+
+        // Wallet Functions
+        async function addFunds() {
+            const amount = prompt("Enter amount to add (₹):");
+            if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                const currentBalance = parseFloat(document.getElementById("walletBalance").textContent);
+                const newBalance = currentBalance + parseFloat(amount);
+                document.getElementById("walletBalance").textContent = newBalance.toFixed(2);
+                
+                profileData.walletBalance = newBalance.toFixed(2);
+                try {
+                    await StorageHelper.set('profile-data', JSON.stringify(profileData));
+                    alert(`✅ Successfully added ₹${amount} to your wallet!`);
+                } catch (error) {
+                    console.error('Error saving wallet balance:', error);
+                }
+            }
+        }
+
+        async function withdrawFunds() {
+            const amount = prompt("Enter amount to withdraw (₹):");
+            if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                const currentBalance = parseFloat(document.getElementById("walletBalance").textContent);
+                if (parseFloat(amount) <= currentBalance) {
+                    const newBalance = currentBalance - parseFloat(amount);
+                    document.getElementById("walletBalance").textContent = newBalance.toFixed(2);
+                    
+                    profileData.walletBalance = newBalance.toFixed(2);
+                    try {
+                        await StorageHelper.set('profile-data', JSON.stringify(profileData));
+                        alert(`✅ Successfully withdrawn ₹${amount} from your wallet!`);
+                    } catch (error) {
+                        console.error('Error saving wallet balance:', error);
+                    }
+                } else {
+                    alert("❌ Insufficient balance!");
+                }
+            }
+        }
+
+        function viewTransactions() {
+            alert("📊 Transaction History:\n\n1. Payment Received: +₹3,200\n2. Withdrawal: -₹1,500\n3. Payment Received: +₹2,500\n4. Service Fee: -₹50");
+        }
+
+        async function editAddress() {
+            const newAddress = prompt("Enter new farm address:", document.getElementById("addressText").textContent);
+            if (newAddress && newAddress.trim()) {
+                document.getElementById("addressText").textContent = newAddress;
+                profileData.farmAddress = newAddress;
+                try {
+                    await StorageHelper.set('profile-data', JSON.stringify(profileData));
+                    alert("✅ Address updated successfully!");
+                } catch (error) {
+                    console.error('Error saving address:', error);
+                    alert("❌ Error saving address. Please try again.");
+                }
+            }
+        }
+
+        function changePassword() {
+            alert("🔐 Password change functionality would redirect to a secure password change page.");
+        }
+
+        function editPrivacy() {
+            alert("⚙️ Privacy settings panel would open here.");
+        }
+
+        function editBankDetails() {
+            alert("🏦 Bank details update form would open here.");
+        }
+
+        function viewCertificates() {
+            alert("📜 Your Certifications:\n\n• Organic Farming Certificate (Valid till 2026)\n• Quality Assurance Certificate\n• Good Agricultural Practices (GAP)");
+        }
+
+        function editFarmDetails() {
+            alert("🚜 Farm details editor would open here.");
+        }
+
+        function viewNotification(id) {
+            alert(`📬 Viewing notification #${id}`);
+        }
+    </script>
+</body>
+</html>

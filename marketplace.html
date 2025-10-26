@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Marketplace - QR System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            animation: slideDown 0.6s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 35px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 15px 35px;
+            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: #667eea;
+            font-size: 1.05em;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.08);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+        }
+
+        .tab-btn:hover:not(.active) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 22px rgba(0,0,0,0.2);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #444;
+            font-size: 0.95em;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2.5px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            background: #fafafa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            header h1 {
+                font-size: 2em;
+            }
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .qr-container {
+            text-align: center;
+            margin: 35px 0;
+            padding: 30px;
+            background: linear-gradient(135deg, #f0f4ff 0%, #e5e7ff 100%);
+            border-radius: 20px;
+            border: 3px solid #667eea;
+        }
+
+        .qr-container h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        #qrcode {
+            display: inline-block;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            margin: 20px 0;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 15px;
+            margin: 15px 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: block;
+            object-fit: cover;
+        }
+
+        .image-preview-container {
+            position: relative;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        video {
+            width: 100%;
+            display: block;
+            background: #000;
+        }
+
+        .scan-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 250px;
+            height: 250px;
+            border: 3px solid #10b981;
+            border-radius: 20px;
+            box-shadow: 0 0 0 9999px rgba(0,0,0,0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .scan-status {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(16, 185, 129, 0.95);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .canvas-hidden {
+            display: none;
+        }
+
+        .scanned-data {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            border-left: 5px solid #10b981;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .scanned-data h3 {
+            color: #059669;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .product-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .product-item h4 {
+            color: #667eea;
+            margin-bottom: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        .product-item p {
+            color: #555;
+            font-size: 0.95em;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border-left: 5px solid #ef4444;
+            font-weight: 600;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .payment-section {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+            border-left: 5px solid #f59e0b;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .payment-section h3 {
+            color: #92400e;
+            margin-bottom: 18px;
+            font-size: 1.4em;
+            font-weight: 700;
+        }
+
+        .price-display {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .file-input-label:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ddd, transparent);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 20px;
+            position: relative;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 700;
+            margin-left: 10px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌾 Crop Marketplace</h1>
+            <p>Advanced QR-Based Farmer Produce System</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('generator')">📝 Generate QR</button>
+            <button class="tab-btn" onclick="switchTab('scanner')">📱 Scan QR</button>
+        </div>
+
+        <div id="generator" class="tab-content active">
+            <div class="card">
+                <h2>Create New Produce Batch </h2>
+                <form id="generatorForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>👨‍🌾 Farmer Name *</label>
+                            <input type="text" id="farmerName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>🌱 Crop Type *</label>
+                            <select id="cropType" onchange="updateByProducts()" required>
+                                <option value="">Select Crop Type...</option>
+                                <option value="Soybean">Soybean</option>
+                                <option value="Groundnut">Groundnut</option>
+                                <option value="Sunflower">Sunflower</option>
+                                <option value="Rapeseed">Rapeseed</option>
+                                <option value="Mustard">Mustard</option>
+                                <option value="Cottonseed">Cottonseed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>📦 By-Product Type *</label>
+                            <select id="byProduct" required>
+                                <option value="">First select a crop type...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>🧪 Fertilizer Used *</label>
+                            <input type="text" id="fertilizer" placeholder="e.g., Organic Compost" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>⚖️ Quantity (kg) *</label>
+                            <input type="number" id="quantity" placeholder="Enter quantity" min="0.1" step="0.1" required>
+                        </div>
+                        <div class="form-group">
+                            <label>💰 Price per kg (₹) *</label>
+                            <input type="number" id="price" placeholder="Enter price" min="0.01" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📸 Produce Image (Optional)</label>
+                        <label class="file-input-label" for="imageFile">
+                            <span id="fileLabel">Choose Image</span>
+                        </label>
+                        <input type="file" id="imageFile" accept="image/*" onchange="previewImage()">
+                        <div id="imagePreview"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>📝 Additional Notes (Optional)</label>
+                        <textarea id="notes" placeholder="Quality certifications, organic status..." rows="3"></textarea>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="generateQR()" style="width: 100%;">
+                        🎯 Generate QR Code
+                    </button>
+                </form>
+
+                <div id="qrSection" style="display: none;">
+                    <div class="qr-container">
+                        <h3>✅ Your QR Code is Ready!</h3>
+                        <canvas id="qrcode"></canvas>
+                        <div class="btn-group">
+                            <button class="btn btn-success" onclick="downloadQR()">⬇️ Download QR</button>
+                            <button class="btn btn-secondary" onclick="resetGenerator()">🔄 Create New</button>
+                        </div>
+                    </div>
+
+                    <div class="payment-section">
+                        <h3>📋 Batch Summary</h3>
+                        <div id="batchSummary"></div>
+                        <div class="price-display">Total: ₹<span id="totalPrice">0</span></div>
+                        <button type="button" class="btn btn-success" onclick="proceedToPayment()" style="width: 100%; font-size: 1.1em;">
+                            🚀 List on Marketplace
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="scanner" class="tab-content">
+            <div class="card">
+                <h2>Scan Produce QR Code </h2>
+                
+                <div class="form-group">
+                    <label>📤 Upload QR Code Image</label>
+                    <label class="file-input-label" for="qrUpload">
+                        <span id="qrFileLabel">Choose QR Image</span>
+                    </label>
+                    <input type="file" id="qrUpload" accept="image/*" onchange="scanQRFromImage()">
+                </div>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <button class="btn btn-primary" onclick="startCamera()" style="width: 100%; font-size: 1.1em;">
+                    📷 Start Smart Camera
+                </button>
+                
+                <div id="cameraSection" style="display: none; margin-top: 25px;">
+                    <div class="video-container">
+                        <video id="video" autoplay playsinline></video>
+                        <div class="scan-overlay"></div>
+                        <div class="scan-status">🔍 Scanning for QR code...</div>
+                    </div>
+                    <canvas id="scanCanvas" class="canvas-hidden"></canvas>
+                    <button class="btn btn-danger" onclick="stopCamera()" style="width: 100%; margin-top: 15px;">
+                        ⏹️ Stop Camera
+                    </button>
+                </div>
+
+                <div id="scannedResult" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <script>
+        const cropData = {
+            "Soybean": ["Soybean Meal (44% Protein)", "Soybean Cake", "Soy Hulls"],
+            "Groundnut": ["Groundnut Meal", "Groundnut Cake", "Peanut Shells"],
+            "Sunflower": ["Sunflower Meal", "Sunflower Cake", "Sunflower Hulls"],
+            "Rapeseed": ["Rapeseed Meal", "Canola Meal", "Rapeseed Cake"],
+            "Mustard": ["Mustard Cake", "Mustard Meal", "De-oiled Mustard Cake"],
+            "Cottonseed": ["Cottonseed Meal", "Cottonseed Cake", "Cottonseed Hulls"]
+        };
+
+        let currentImageData = null;
+        let scanningActive = false;
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (tab === 'scanner') {
+                stopCamera();
+            }
+        }
+
+        function updateByProducts() {
+            const crop = document.getElementById('cropType').value;
+            const byProductSelect = document.getElementById('byProduct');
+            byProductSelect.innerHTML = '<option value="">Select By-Product...</option>';
+            
+            if (crop && cropData[crop]) {
+                cropData[crop].forEach(product => {
+                    const option = document.createElement('option');
+                    option.value = product;
+                    option.textContent = product;
+                    byProductSelect.appendChild(option);
+                });
+            }
+        }
+
+        function previewImage() {
+            const file = document.getElementById('imageFile').files[0];
+            const preview = document.getElementById('imagePreview');
+            const label = document.getElementById('fileLabel');
+            
+            if (file) {
+                label.textContent = '✓ ' + file.name.substring(0, 20);
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    currentImageData = e.target.result;
+                    preview.innerHTML = `
+                        <div class="image-preview-container">
+                            <img src="${e.target.result}" class="image-preview">
+                            <button class="remove-image" onclick="removeImage()" title="Remove">✕</button>
+                        </div>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function removeImage() {
+            document.getElementById('imageFile').value = '';
+            document.getElementById('imagePreview').innerHTML = '';
+            document.getElementById('fileLabel').textContent = 'Choose Image';
+            currentImageData = null;
+        }
+
+        function generateQR() {
+            const farmerName = document.getElementById('farmerName').value.trim();
+            const crop = document.getElementById('cropType').value;
+            const byProduct = document.getElementById('byProduct').value;
+            const fertilizer = document.getElementById('fertilizer').value.trim();
+            const quantity = document.getElementById('quantity').value;
+            const price = document.getElementById('price').value;
+            const notes = document.getElementById('notes').value.trim();
+
+            if (!farmerName || !crop || !byProduct || !fertilizer || !quantity || !price) {
+                alert('⚠️ Please fill all required fields!');
+                return;
+            }
+
+            const batchData = {
+                id: 'BATCH-' + Date.now(),
+                farmerName,
+                crop,
+                byProduct,
+                fertilizer,
+                quantity: parseFloat(quantity),
+                pricePerKg: parseFloat(price),
+                totalPrice: (parseFloat(quantity) * parseFloat(price)).toFixed(2),
+                notes,
+                hasImage: currentImageData ? true : false,
+                timestamp: new Date().toISOString()
+            };
+
+            // Store full data with image separately
+            window.currentBatch = {
+                ...batchData,
+                image: currentImageData
+            };
+            
+            // Store in memory for scanning (simulating database)
+            if (!window.batchDatabase) {
+                window.batchDatabase = {};
+            }
+            window.batchDatabase[batchData.id] = {
+                ...batchData,
+                image: currentImageData
+            };
+
+            // Generate QR with only essential data (no image)
+            const canvas = document.getElementById('qrcode');
+            const ctx = canvas.getContext('2d');
+            const qrData = JSON.stringify(batchData);
+            
+            try {
+                // Create QR code
+                const qr = qrcode(0, 'H');
+                qr.addData(qrData);
+                qr.make();
+                
+                const moduleCount = qr.getModuleCount();
+                const cellSize = 300 / moduleCount;
+                
+                canvas.width = 300;
+                canvas.height = 300;
+                
+                // Draw white background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, 300, 300);
+                
+                // Draw QR code
+                ctx.fillStyle = '#667eea';
+                for (let row = 0; row < moduleCount; row++) {
+                    for (let col = 0; col < moduleCount; col++) {
+                        if (qr.isDark(row, col)) {
+                            ctx.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('QR Generation Error:', error);
+                alert('Error generating QR code. Data might be too large.');
+                return;
+            }
+
+            const summary = `
+                <strong>👨‍🌾 Farmer:</strong> ${farmerName}<br>
+                <strong>🌱 Crop:</strong> ${crop}<br>
+                <strong>📦 By-Product:</strong> ${byProduct}<br>
+                <strong>🧪 Fertilizer:</strong> ${fertilizer}<br>
+                <strong>⚖️ Quantity:</strong> ${quantity} kg<br>
+                <strong>💰 Price per kg:</strong> ₹${parseFloat(price).toFixed(2)}<br>
+                ${notes ? `<strong>📝 Notes:</strong> ${notes}<br>` : ''}
+                <strong>🆔 Batch ID:</strong> ${batchData.id}
+            `;
+            
+            document.getElementById('batchSummary').innerHTML = summary;
+            document.getElementById('totalPrice').textContent = batchData.totalPrice;
+            document.getElementById('qrSection').style.display = 'block';
+            
+            document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadQR() {
+            const canvas = document.getElementById('qrcode');
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = `QR-${window.currentBatch.id}.png`;
+            link.click();
+            
+            alert('✅ QR Code downloaded successfully!');
+        }
+
+        function resetGenerator() {
+            if (confirm('Reset the form?')) {
+                document.getElementById('generatorForm').reset();
+                document.getElementById('imagePreview').innerHTML = '';
+                document.getElementById('fileLabel').textContent = 'Choose Image';
+                document.getElementById('qrSection').style.display = 'none';
+                document.getElementById('byProduct').innerHTML = '<option value="">First select a crop type...</option>';
+                currentImageData = null;
+                window.currentBatch = null;
+            }
+        }
+
+        function proceedToPayment() {
+            const batch = window.currentBatch;
+            alert(`✅ Listed Successfully!\n\nBatch: ${batch.id}\nTotal: ₹${batch.totalPrice}`);
+        }
+
+        function startCamera() {
+            // Check if jsQR is loaded
+            if (typeof jsQR === 'undefined') {
+                alert('⚠️ QR Scanner library is loading. Please wait a moment and try again.');
+                return;
+            }
+            
+            navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: 'environment' }
+            })
+            .then(stream => {
+                const video = document.getElementById('video');
+                video.srcObject = stream;
+                document.getElementById('cameraSection').style.display = 'block';
+                scanningActive = true;
+                
+                video.addEventListener('loadeddata', () => {
+                    scanQRFromCamera();
+                });
+            })
+            .catch(err => {
+                alert('❌ Camera access denied. Please allow camera access or upload QR image instead.');
+            });
+        }
+
+        function stopCamera() {
+            const video = document.getElementById('video');
+            const stream = video.srcObject;
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            scanningActive = false;
+            document.getElementById('cameraSection').style.display = 'none';
+        }
+
+        function scanQRFromCamera() {
+            if (!scanningActive) return;
+            
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('scanCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function scan() {
+                if (!scanningActive || !video.videoWidth) {
+                    if (scanningActive) requestAnimationFrame(scan);
+                    return;
+                }
+                
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height);
+                
+                if (code) {
+                    try {
+                        const data = JSON.parse(code.data);
+                        displayScannedData(data);
+                        stopCamera();
+                        return;
+                    } catch (e) {
+                        // Invalid QR, continue scanning
+                    }
+                }
+                requestAnimationFrame(scan);
+            }
+            scan();
+        }
+
+        function scanQRFromImage() {
+            const file = document.getElementById('qrUpload').files[0];
+            const label = document.getElementById('qrFileLabel');
+            
+            if (!file) return;
+            
+            // Check if jsQR is loaded
+            if (typeof jsQR === 'undefined') {
+                alert('⚠️ QR Scanner library is loading. Please wait a moment and try again.');
+                return;
+            }
+            
+            label.textContent = '🔍 Scanning...';
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.getElementById('scanCanvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    
+                    if (code) {
+                        try {
+                            const data = JSON.parse(code.data);
+                            displayScannedData(data);
+                            label.textContent = '✓ QR Scanned!';
+                            setTimeout(() => {
+                                label.textContent = 'Choose QR Image';
+                            }, 2000);
+                        } catch (e) {
+                            label.textContent = 'Choose QR Image';
+                            showError('❌ Invalid QR code data.');
+                        }
+                    } else {
+                        label.textContent = 'Choose QR Image';
+                        showError('❌ No QR code found in image.');
+                    }
+                };
+                img.onerror = function() {
+                    label.textContent = 'Choose QR Image';
+                    showError('❌ Failed to load image.');
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayScannedData(data) {
+            // Try to get full data from database (including image)
+            const fullData = window.batchDatabase && window.batchDatabase[data.id] 
+                ? window.batchDatabase[data.id] 
+                : data;
+            
+            const total = parseFloat(fullData.totalPrice || (fullData.quantity * fullData.pricePerKg));
+            const html = `
+                <div class="scanned-data">
+                    <h3>✅ QR Code Scanned Successfully!</h3>
+                    <div class="product-item">
+                        <h4>🆔 ${fullData.id}</h4>
+                        <p><strong>👨‍🌾 Farmer:</strong> ${fullData.farmerName}</p>
+                        <p><strong>🌱 Crop Type:</strong> ${fullData.crop}</p>
+                        <p><strong>📦 By-Product:</strong> ${fullData.byProduct}</p>
+                        <p><strong>🧪 Fertilizer:</strong> ${fullData.fertilizer}</p>
+                        <p><strong>⚖️ Quantity:</strong> ${fullData.quantity} kg</p>
+                        <p><strong>💰 Price per kg:</strong> ₹${parseFloat(fullData.pricePerKg).toFixed(2)}</p>
+                        <p><strong>💵 Total Amount:</strong> <span style="color: #667eea; font-size: 1.3em; font-weight: 700;">₹${total.toFixed(2)}</span></p>
+                        <p><strong>📅 Listed:</strong> ${new Date(fullData.timestamp).toLocaleString('en-IN')}</p>
+                        ${fullData.notes ? `<p><strong>📝 Notes:</strong> ${fullData.notes}</p>` : ''}
+                        ${fullData.image ? `<img src="${fullData.image}" class="image-preview" style="margin-top: 15px;">` : ''}
+                    </div>
+                    <button class="btn btn-success" onclick="buyNow('${fullData.id}', '${fullData.farmerName}', '${total.toFixed(2)}')" style="width: 100%; font-size: 1.1em;">
+                        🛒 Buy Now - ₹${total.toFixed(2)}
+                    </button>
+                </div>
+            `;
+            document.getElementById('scannedResult').innerHTML = html;
+            document.getElementById('scannedResult').style.display = 'block';
+            document.getElementById('scannedResult').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showError(message) {
+            const result = document.getElementById('scannedResult');
+            result.innerHTML = `<div class="error-message">${message}</div>`;
+            result.style.display = 'block';
+            setTimeout(() => {
+                result.style.display = 'none';
+            }, 4000);
+        }
+
+        function buyNow(batchId, farmer, amount) {
+            if (confirm(`Confirm Purchase?\n\nBatch: ${batchId}\nFarmer: ${farmer}\nAmount: ₹${amount}`)) {
+                alert(`✅ Order Placed!\n\nBatch: ${batchId}\nAmount: ₹${amount}\n\nOrder confirmation sent!`);
+            }
+        }
+
+        window.addEventListener('beforeunload', () => {
+            stopCamera();
+        });
+    </script>
+</body>
+</html>
