@@ -13,8 +13,8 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #0a2e0a 100%);
-            color: #fff;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8f5e9 50%, #f1f8e9 100%);
+            color: #1a1a1a;
             min-height: 100vh;
             padding: 20px;
         }
@@ -28,18 +28,22 @@
             text-align: center;
             margin-bottom: 40px;
             padding: 30px;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(255, 255, 255, 0.8) 100%);
             border-radius: 20px;
-            border: 2px solid rgba(76, 175, 80, 0.3);
+            border: 2px solid rgba(76, 175, 80, 0.5);
         }
 
         .header h1 {
             font-size: 3rem;
-            background: linear-gradient(135deg, #4CAF50, #8BC34A, #CDDC39);
+            background: linear-gradient(135deg, #2e7d32, #558b2f, #9ccc65);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #333;
         }
 
         .blockchain-badge {
@@ -49,6 +53,7 @@
             border-radius: 20px;
             font-size: 0.9rem;
             margin-top: 10px;
+            color: white;
             animation: glow 2s ease-in-out infinite;
         }
 
@@ -68,8 +73,8 @@
         .tab-btn {
             padding: 15px 35px;
             border: none;
-            background: rgba(76, 175, 80, 0.1);
-            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.15);
+            color: #2e7d32;
             font-size: 1.05em;
             font-weight: 700;
             border-radius: 50px;
@@ -80,7 +85,7 @@
 
         .tab-btn.active {
             background: linear-gradient(135deg, #4CAF50, #66BB6A);
-            color: #000;
+            color: #fff;
             transform: scale(1.08);
         }
 
@@ -99,12 +104,12 @@
         }
 
         .connection-panel {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
             padding: 40px;
             border-radius: 20px;
             margin-bottom: 30px;
-            border: 2px solid #333;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 2px solid #ddd;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             text-align: center;
         }
 
@@ -113,17 +118,21 @@
             align-items: center;
             gap: 15px;
             padding: 20px 40px;
-            background: #0a0a0a;
+            background: #fafafa;
             border-radius: 50px;
             margin-bottom: 30px;
-            border: 2px solid #333;
+            border: 2px solid #ddd;
+        }
+
+        .device-status span {
+            color: #333;
         }
 
         .status-indicator {
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            background: #666;
+            background: #999;
             animation: pulse 2s ease-in-out infinite;
         }
 
@@ -158,12 +167,12 @@
         }
 
         .blockchain-dashboard {
-            background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
             padding: 30px;
             border-radius: 20px;
             border: 2px solid #667eea;
             margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.1);
         }
 
         .blockchain-title {
@@ -185,7 +194,7 @@
         }
 
         .stat-card {
-            background: #0a0a0a;
+            background: #f5f7ff;
             padding: 20px;
             border-radius: 15px;
             border-left: 4px solid #667eea;
@@ -203,16 +212,21 @@
         .stat-card .value {
             font-size: 2rem;
             font-weight: 700;
-            color: #fff;
+            color: #1a1a1a;
         }
 
         .blockchain-chain {
-            background: #0a0a0a;
+            background: #ffffff;
             padding: 20px;
             border-radius: 15px;
-            border: 2px solid #333;
+            border: 2px solid #ddd;
             max-height: 400px;
             overflow-y: auto;
+        }
+
+        .blockchain-chain > div {
+            color: #666;
+            text-align: center;
         }
 
         .block {
@@ -222,6 +236,7 @@
             margin-bottom: 15px;
             position: relative;
             animation: blockAppear 0.5s ease;
+            color: white;
         }
 
         @keyframes blockAppear {
@@ -231,7 +246,7 @@
 
         .block h5 {
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: 8px;
             text-transform: uppercase;
         }
@@ -240,16 +255,16 @@
             font-size: 0.75rem;
             word-break: break-all;
             font-family: monospace;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             padding: 8px;
             border-radius: 5px;
             margin: 5px 0;
-            color: #8BC34A;
+            color: #c8e6c9;
         }
 
         .block-content {
             font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.9);
+            color: rgba(255, 255, 255, 0.95);
             margin-top: 8px;
         }
 
@@ -269,11 +284,11 @@
         }
 
         .sensor-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
             padding: 30px;
             border-radius: 20px;
-            border: 2px solid #333;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid #e0e0e0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             position: relative;
             overflow: hidden;
         }
@@ -297,7 +312,7 @@
 
         .sensor-title {
             font-size: 1.1rem;
-            color: #4CAF50;
+            color: #2e7d32;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
@@ -306,13 +321,13 @@
         .sensor-value {
             font-size: 3.5rem;
             font-weight: 700;
-            color: #fff;
+            color: #1a1a1a;
             margin: 20px 0;
         }
 
         .sensor-unit {
             font-size: 1.5rem;
-            color: #888;
+            color: #999;
             margin-left: 10px;
         }
 
@@ -327,20 +342,20 @@
 
         .status-optimal {
             background: rgba(76, 175, 80, 0.2);
-            color: #4CAF50;
+            color: #2e7d32;
             border: 1px solid #4CAF50;
         }
 
         .status-warning {
             background: rgba(255, 152, 0, 0.2);
-            color: #FF9800;
+            color: #e65100;
             border: 1px solid #FF9800;
         }
 
         .progress-bar {
             width: 100%;
             height: 10px;
-            background: #0a0a0a;
+            background: #e0e0e0;
             border-radius: 10px;
             overflow: hidden;
             margin-top: 15px;
@@ -354,11 +369,11 @@
         }
 
         .scanner-section {
-            background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
+            background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
             padding: 40px;
             border-radius: 20px;
-            border: 2px solid #333;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            border: 2px solid #ddd;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
             margin-bottom: 30px;
             opacity: 0.3;
             pointer-events: none;
@@ -372,7 +387,7 @@
 
         .scanner-title {
             font-size: 2rem;
-            color: #4CAF50;
+            color: #2e7d32;
             margin-bottom: 30px;
             text-align: center;
         }
@@ -395,7 +410,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #666;
+            color: #999;
             font-size: 1.2rem;
             position: relative;
         }
@@ -447,7 +462,7 @@
         }
 
         .scan-btn:disabled {
-            background: #666;
+            background: #ccc;
             cursor: not-allowed;
         }
 
@@ -459,20 +474,20 @@
             display: block;
             margin-bottom: 10px;
             font-weight: 600;
-            color: #4CAF50;
+            color: #2e7d32;
             font-size: 0.95em;
         }
 
         input, select, textarea {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid #333;
+            border: 2px solid #ddd;
             border-radius: 12px;
             font-size: 1em;
             transition: all 0.3s ease;
             font-family: inherit;
-            background: #0a0a0a;
-            color: #fff;
+            background: #ffffff;
+            color: #1a1a1a;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -491,13 +506,13 @@
             text-align: center;
             margin: 35px 0;
             padding: 30px;
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.08) 100%);
             border-radius: 20px;
             border: 3px solid #4CAF50;
         }
 
         .qr-container h3 {
-            color: #4CAF50;
+            color: #2e7d32;
             margin-bottom: 20px;
             font-size: 1.5em;
             font-weight: 700;
@@ -508,7 +523,7 @@
             padding: 20px;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             margin: 20px 0;
         }
 
@@ -566,7 +581,7 @@
         }
 
         .scanned-data {
-            background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.12) 0%, rgba(76, 175, 80, 0.06) 100%);
             padding: 25px;
             border-radius: 15px;
             margin: 25px 0;
@@ -574,21 +589,26 @@
         }
 
         .scanned-data h3 {
-            color: #4CAF50;
+            color: #2e7d32;
             margin-bottom: 20px;
             font-size: 1.4em;
         }
 
         .product-item {
-            background: #0a0a0a;
+            background: #f9f9f9;
             padding: 20px;
             border-radius: 12px;
             margin: 15px 0;
             border-left: 5px solid #4CAF50;
         }
 
+        .product-item h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+
         .product-item p {
-            color: #aaa;
+            color: #555;
             font-size: 0.95em;
             margin: 8px 0;
             line-height: 1.6;
@@ -842,7 +862,7 @@
                             <button class="btn btn-secondary" onclick="resetGenerator()">🔄 Create New</button>
                         </div>
                     </div>
-                    <div id="qrBatchSummary" style="padding: 20px; background: #0a0a0a; border-radius: 15px; margin-top: 20px;"></div>
+                    <div id="qrBatchSummary" style="padding: 20px; background: #f5f5f5; border-radius: 15px; margin-top: 20px;"></div>
                 </div>
             </div>
         </div>
@@ -875,6 +895,7 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script>
         // Oilseed Database
         const oilseedData = {
@@ -933,14 +954,16 @@
 
         // Simple SHA-256 hash simulation
         function simpleHash(data) {
-            let hash = 0;
+            let hash = 0x811c9dc5; // FNV offset basis
             const str = JSON.stringify(data);
             for (let i = 0; i < str.length; i++) {
-                const char = str.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
+                hash = hash ^ str.charCodeAt(i);
+                hash = (hash * 0x01000193) >>> 0; // FNV prime, ensure 32-bit
             }
-            return Math.abs(hash).toString(16).padStart(64, '0').substring(0, 64);
+            // Convert to hex and pad with letters for better randomness
+            const hex = Math.abs(hash).toString(16).padStart(8, '0');
+            const suffix = Date.now().toString(16);
+            return (hex + suffix + Math.random().toString(16).substring(2)).substring(0, 64);
         }
 
         // Add to blockchain
@@ -1249,16 +1272,87 @@
                 <div class="scanned-data" style="display: block;">
                     <h3>✅ AI Analysis Complete!</h3>
                     <div style="text-align: center; margin: 20px 0;">
-                        <div style="font-size: 2.5rem; color: #4CAF50; font-weight: 700;">${seedName}</div>
-                        <div style="color: #8BC34A; font-size: 1.1rem;">Confidence: ${confidence}%</div>
+                        <div style="font-size: 2.5rem; color: #2e7d32; font-weight: 700;">${seedName}</div>
+                        <div style="color: #558b2f; font-size: 1.1rem;">Confidence: ${confidence}%</div>
                     </div>
-                    <h4 style="color: #4CAF50; margin: 20px 0;">📊 By-Products Available</h4>
+                    <h4 style="color: #2e7d32; margin: 20px 0;">📊 By-Products Available</h4>
                     ${byproductsHTML}
                 </div>
             `;
             resultsSection.style.display = 'block';
         }
 
+        // QR Code Generation
+        function generateQR() {
+            const farmerName = document.getElementById('farmerName').value.trim();
+            const oilseed = document.getElementById('oilseedType').value;
+            const byProduct = document.getElementById('byProductType').value;
+            const quantity = parseFloat(document.getElementById('quantity').value);
+            const pricePerQuintal = parseFloat(document.getElementById('price').value);
+            const location = document.getElementById('location').value.trim();
+            const notes = document.getElementById('notes').value.trim();
+
+            if (!farmerName || !oilseed || !byProduct || !quantity || !pricePerQuintal || !location) {
+                alert('Please fill all required fields');
+                return;
+            }
+
+            const totalPrice = quantity * pricePerQuintal;
+            const batchId = 'BATCH_' + Date.now();
+
+            currentBatchData = {
+                id: batchId,
+                farmerName,
+                oilseed,
+                byProduct,
+                quantity,
+                pricePerQuintal,
+                totalPrice,
+                location,
+                notes,
+                timestamp: new Date().toLocaleString('en-IN')
+            };
+
+            const qrText = JSON.stringify(currentBatchData);
+
+            document.getElementById('qrcode').innerHTML = '';
+            new QRCode(document.getElementById('qrcode'), {
+                text: qrText,
+                width: 256,
+                height: 256,
+                colorDark: '#000000',
+                colorLight: '#ffffff'
+            });
+
+            document.getElementById('qrSection').style.display = 'block';
+            document.getElementById('qrBatchSummary').innerHTML = `
+                <h4 style="color: #2e7d32; margin-bottom: 15px;">📋 Batch Summary</h4>
+                <p><strong>Batch ID:</strong> ${batchId}</p>
+                <p><strong>Farmer:</strong> ${farmerName}</p>
+                <p><strong>Oilseed:</strong> ${oilseed}</p>
+                <p><strong>By-Product:</strong> ${byProduct}</p>
+                <p><strong>Quantity:</strong> ${quantity} quintals</p>
+                <p><strong>Total Value:</strong> ₹${totalPrice.toLocaleString('en-IN')}</p>
+            `;
+
+            addToBlockchain(currentBatchData, 'qr');
+            document.getElementById('qrSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function downloadQR() {
+            if (!currentBatchData) return;
+            const canvas = document.getElementById('qrcode').querySelector('canvas');
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL();
+            link.download = `QR_${currentBatchData.id}.png`;
+            link.click();
+        }
+
+        function resetGenerator() {
+            document.getElementById('generatorForm').reset();
+            document.getElementById('qrSection').style.display = 'none';
+            currentBatchData = null;
+        }
 
         // QR Scanner
         function startQRCamera() {
@@ -1317,19 +1411,18 @@
         }
 
         function displayScannedQRData(data) {
-            const fullData = (window.batchDatabase && window.batchDatabase[data.id]) ? window.batchDatabase[data.id] : data;
-            addToBlockchain(fullData, 'qr-scan');
+            addToBlockchain(data, 'qr-scan');
             
             const html = `
                 <div class="scanned-data">
                     <h3>✅ QR Scanned!</h3>
                     <div class="product-item">
-                        <p><strong>👨‍🌾 Farmer:</strong> ${fullData.farmerName}</p>
-                        <p><strong>🌱 Oilseed:</strong> ${fullData.oilseed}</p>
-                        <p><strong>📦 By-Product:</strong> ${fullData.byProduct}</p>
-                        <p><strong>⚖️ Quantity:</strong> ${fullData.quantity} quintals</p>
-                        <p><strong>💰 Price:</strong> ₹${parseFloat(fullData.pricePerQuintal).toLocaleString('en-IN')}/quintal</p>
-                        <p><strong>💵 Total:</strong> <span style="color: #4CAF50; font-size: 1.3em;">₹${parseFloat(fullData.totalPrice).toLocaleString('en-IN')}</span></p>
+                        <p><strong>👨‍🌾 Farmer:</strong> ${data.farmerName}</p>
+                        <p><strong>🌱 Oilseed:</strong> ${data.oilseed}</p>
+                        <p><strong>📦 By-Product:</strong> ${data.byProduct}</p>
+                        <p><strong>⚖️ Quantity:</strong> ${data.quantity} quintals</p>
+                        <p><strong>💰 Price:</strong> ₹${parseFloat(data.pricePerQuintal).toLocaleString('en-IN')}/quintal</p>
+                        <p><strong>💵 Total:</strong> <span style="color: #4CAF50; font-size: 1.3em;">₹${parseFloat(data.totalPrice).toLocaleString('en-IN')}</span></p>
                     </div>
                     <button class="btn btn-success" onclick="alert('✅ Order Placed!')" style="width: 100%; margin-top: 20px;">
                         🛒 Buy Now
